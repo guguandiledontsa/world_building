@@ -1,5 +1,5 @@
 import unittest
-from main.position import Position
+from main.world_objects.position import Position
 
 
 class TestPosition(unittest.TestCase):

@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import patch
-from main.robot import Robot
-from main.position import Position
-from main.direction import Direction
+from main.world_objects.robot import Robot
+from main.world_objects.position import Position
+from main.world_objects.direction import Direction
 
 
 class MyTestCase(unittest.TestCase):
@@ -64,7 +64,7 @@ class MyTestCase(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(self.default_robot.position, Position(0, -3))
 
-    @patch('main.position.Position.move')
+    @patch('main.world_objects.position.Position.move')
     def test_update_position_with_mock(self, mock_move):
         mock_move.return_value = Position(5, 5)
         self.default_robot.position = Position(0, 0)

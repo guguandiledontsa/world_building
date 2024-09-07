@@ -1,6 +1,6 @@
 import unittest
-from main.direction import Direction
-from main.position import Position
+from main.world_objects.direction import Direction
+from main.world_objects.position import Position
 
 class MyTestCase(unittest.TestCase):
     def test_initial_position(self):

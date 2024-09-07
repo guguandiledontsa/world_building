@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from main.position import Position
-from main.direction import Direction
+from main.world_objects.position import Position
+from main.world_objects.direction import Direction
 
 # Define the Robot Class
 @dataclass
