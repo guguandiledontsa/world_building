@@ -3,6 +3,8 @@ from .direction import Direction
 
 from dataclasses import dataclass, field
 from typing import Tuple, Callable, Dict
+from math import sqrt, cos, sin
+
 
 @dataclass(frozen=True)
 class Position:
@@ -27,7 +29,6 @@ class Position:
 
     def distance_to(self, other:'Position') -> float:
         """Calculate the distance to another Position."""
-        from math import sqrt # type: ignore
         return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2) # type: ignore
 
     def is_in(self, top_left: 'Position', bottom_right: 'Position') -> bool:
