@@ -48,6 +48,22 @@ class Robot:
         self.position = new_position
         return True
 
+    def move_forward(self, nr_steps: int) -> bool:
+        """Move the robot forward by a given number of steps."""
+        return self.update_position(nr_steps, forward=True)
+
+    def move_backward(self, nr_steps: int) -> bool:
+        """Move the robot backward by a given number of steps."""
+        return self.update_position(nr_steps, forward=False)
+
+    def turn_left(self, degrees: float = 90) -> None:
+        """Turn the robot left by the given number of degrees."""
+        self.current_direction = self.current_direction.turn_left(degrees)
+
+    def turn_right(self, degrees: float = 90) -> None:
+        """Turn the robot right by the given number of degrees."""
+        self.current_direction = self.current_direction.turn_right(degrees)
+
     def __str__(self):
         return (f"Name: {self.name}, Position: {repr(self.position)}, Direction: {self.current_direction.angle}, "
                 f"Status: {self.status}, Shield Level: {self.shield_level}, Ammo: {self.ammo}, Type: {self.type}")

@@ -9,6 +9,57 @@ class MyTestCase(unittest.TestCase):
         # Setup default test robot
         self.default_robot = Robot(name="TestBot")
 
+    def test_move_forward(self):
+        """Test moving the robot forward."""
+        self.default_robot.position = Position(0, 0)
+        self.default_robot.current_direction = Degrees(90)  # Moving north
+
+        self.default_robot.move_forward(5)
+        self.assertEqual(self.default_robot.position, Position(0, 5))
+
+    def test_move_backward(self):
+        """Test moving the robot backward."""
+        self.default_robot.position = Position(0, 0)
+        self.default_robot.current_direction = Degrees(90)  # Moving north
+
+        self.default_robot.move_backward(3)
+        self.assertEqual(self.default_robot.position, Position(0, -3))
+
+    def test_edge_cases(self):
+        """Test edge cases for moving forward and backward."""
+        self.default_robot.position = Position(0, 0)
+        self.default_robot.current_direction = Degrees(0)  # Moving east
+
+        # Moving forward
+        self.default_robot.move_forward(10)
+        self.assertEqual(self.default_robot.position, Position(10, 0))
+
+        # Moving backward
+        self.default_robot.move_backward(5)
+        self.assertEqual(self.default_robot.position, Position(5, 0))
+
+    def test_update_position_with_mock(self):
+        """Test move_forward and move_backward with mocked move method."""
+        with unittest.mock.patch('main.world_objects.position.Position.move') as mock_move:
+            mock_move.return_value = Position(10, 10)
+            self.default_robot.position = Position(0, 0)
+            direction = Degrees(45)  # Moving northeast
+            self.default_robot.current_direction = direction
+
+            # Testing move_forward
+            self.default_robot.move_forward(15)
+            mock_move.assert_called_with(direction, 15)
+            self.assertEqual(self.default_robot.position, Position(10, 10))
+
+            # Reset the mock and position
+            mock_move.reset_mock()
+            self.default_robot.position = Position(0, 0)
+
+            # Testing move_backward
+            self.default_robot.move_backward(10)
+            mock_move.assert_called_with(direction, -10)
+            self.assertEqual(self.default_robot.position, Position(10, 10))
+
     def test_default_robot_initialization(self):
         robot = self.default_robot
         self.assertEqual(robot.name, "TestBot")
@@ -100,6 +151,39 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(robot.shield_max, 5)
         self.assertEqual(robot.repair_delay, 5)
         self.assertEqual(robot.reload_delay, 5)
+
+
+
+
+    def test_turn_left(self):
+        """Test turning left by 90 degrees."""
+        self.default_robot.current_direction = Degrees(0)  # Facing East
+        self.default_robot.turn_left()
+        self.assertEqual(self.default_robot.current_direction.angle, 270)  # Should now be facing North
+
+        self.default_robot.turn_left()  # Turn left again
+        self.assertEqual(self.default_robot.current_direction.angle, 180)  # Should now be facing West
+
+    def test_turn_right(self):
+        """Test turning right by 90 degrees."""
+        self.default_robot.current_direction = Degrees(0)  # Facing East
+        self.default_robot.turn_right()
+        self.assertEqual(self.default_robot.current_direction.angle, 90)  # Should now be facing South
+
+        self.default_robot.turn_right()  # Turn right again
+        self.assertEqual(self.default_robot.current_direction.angle, 180)  # Should now be facing West
+
+    def test_turn_left_custom_degrees(self):
+        """Test turning left by a custom number of degrees."""
+        self.default_robot.current_direction = Degrees(180)  # Facing South
+        self.default_robot.turn_left(45)
+        self.assertEqual(self.default_robot.current_direction.angle, 135)  # Should now be facing Southeast
+
+    def test_turn_right_custom_degrees(self):
+        """Test turning right by a custom number of degrees."""
+        self.default_robot.current_direction = Degrees(45)  # Facing Northeast
+        self.default_robot.turn_right(45)
+        self.assertEqual(self.default_robot.current_direction.angle, 90)  # Should now be facing East
 
 
 if __name__ == '__main__':

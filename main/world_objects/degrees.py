@@ -14,6 +14,17 @@ class Degrees:
     def _normalize_angle(angle) -> float:
         return angle % 360
 
+    def turn_left(self, degrees: float = 90) -> 'Degrees':
+        """Turn left by the given number of degrees and return a new Degrees instance."""
+        new_angle = self._normalize_angle(self.angle - degrees)
+        return Degrees(new_angle)
+
+    def turn_right(self, degrees: float = 90) -> 'Degrees':
+        """Turn right by the given number of degrees and return a new Degrees instance."""
+        new_angle = self._normalize_angle(self.angle + degrees)
+        return Degrees(new_angle)
+
+
     def __eq__(self, other):
         if not isinstance(other, Degrees):
             return NotImplemented

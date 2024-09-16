@@ -72,5 +72,38 @@ class TestDegrees(unittest.TestCase):
         self.assertNotEqual(d, object())  # Different type
 
 
+    def test_turn_left(self):
+        """Test turning left by 90 degrees."""
+        d = Degrees(90)
+        new_d = d.turn_left()
+        self.assertEqual(new_d.angle, 0)  # 90 - 90 = 0
+
+        d = Degrees(45)
+        new_d = d.turn_left()
+        self.assertEqual(new_d.angle, 315)  # 45 - 90 = -45 % 360 = 315
+
+    def test_turn_right(self):
+        """Test turning right by 90 degrees."""
+        d = Degrees(90)
+        new_d = d.turn_right()
+        self.assertEqual(new_d.angle, 180)  # 90 + 90 = 180
+
+        d = Degrees(270)
+        new_d = d.turn_right()
+        self.assertEqual(new_d.angle, 0)  # 270 + 90 = 360 % 360 = 0
+
+    def test_turn_left_custom_degrees(self):
+        """Test turning left by a custom number of degrees."""
+        d = Degrees(180)
+        new_d = d.turn_left(45)
+        self.assertEqual(new_d.angle, 135)  # 180 - 45 = 135
+
+    def test_turn_right_custom_degrees(self):
+        """Test turning right by a custom number of degrees."""
+        d = Degrees(45)
+        new_d = d.turn_right(45)
+        self.assertEqual(new_d.angle, 90)  # 45 + 45 = 90
+
+
 if __name__ == '__main__':
     unittest.main()
