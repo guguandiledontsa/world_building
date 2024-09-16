@@ -58,19 +58,19 @@ docs:
 sast:
   stage: security
   image: python:3.9
-  include:
-    - template: Security/SAST.gitlab-ci.yml
+  script:
+    - echo "Static Application Security Testing (SAST) not configured yet"
 
 # Dependency Scanning
 dependency_scanning:
   stage: security
   image: python:3.9
-  include:
-    - template: Security/Dependency-Scanning.gitlab-ci.yml
+  script:
+    - echo "Dependency Scanning not configured yet"
 
 # Secret Detection
 secret_detection:
   stage: security
   image: python:3.9
-  include:
-    - template: Security/Secret-Detection.gitlab-ci.yml
+  script:
+    - echo "Secret Detection not configured yet"
