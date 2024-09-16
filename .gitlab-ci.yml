@@ -1,13 +1,76 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/pipeline/#customization
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+# Define stages for the pipeline
 stages:
-- test
-sast:
+  - install
+  - lint
+  - test
+  - freeze
+  - security
+  - docs
+
+# Job to install dependencies
+install:
+  stage: install
+  image: python:3.9 # Use an appropriate Python image
+  script:
+    - pip install -r requirements.txt
+  cache:
+    paths:
+      - .venv/ # Cache virtual environment if using one
+
+# Job to run linting (code style checks)
+lint:
+  stage: lint
+  image: python:3.9
+  script:
+    - pip install flake8
+    - flake8 src/ tests/ # Adjust paths to your source and test directories
+
+# Job to run unit tests
+test:
   stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
+  image: python:3.9
+  script:
+    - python -m unittest discover -s tests -p "*.py" # Discover and run all unittests in the tests directory
+  coverage: '/^TOTAL\s+\d+\s+\d+\s+(\d+%)/' # Adjust regex based on coverage report format
+
+# Job to freeze the environment
+freeze:
+  stage: freeze
+  image: python:3.9
+  script:
+    - pip freeze > requirements_freeze.txt
+  artifacts:
+    paths:
+      - requirements_freeze.txt
+
+# Job to build documentation with Sphinx (if applicable)
+docs:
+  stage: docs
+  image: python:3.9
+  script:
+    - pip install sphinx
+    - sphinx-build -b html docs/ docs/_build/
+  artifacts:
+    paths:
+      - docs/_build/
+
+# Static Application Security Testing (SAST)
+sast:
+  stage: security
+  image: python:3.9
+  include:
+    - template: Security/SAST.gitlab-ci.yml
+
+# Dependency Scanning
+dependency_scanning:
+  stage: security
+  image: python:3.9
+  include:
+    - template: Security/Dependency-Scanning.gitlab-ci.yml
+
+# Secret Detection
+secret_detection:
+  stage: security
+  image: python:3.9
+  include:
+    - template: Security/Secret-Detection.gitlab-ci.yml
