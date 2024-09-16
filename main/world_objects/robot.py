@@ -2,14 +2,13 @@ from dataclasses import dataclass, field
 from typing import List
 
 from main.world_objects.position import Position
-from main.world_objects.direction import Direction
+from main.world_objects.degrees import Degrees  # Import Degrees instead of Direction
 
-# Define the Robot Class
 @dataclass
 class Robot:
     name: str
     position: Position = field(default_factory=lambda: Position(0, 0))
-    current_direction: Direction = field(default=Direction.NORTH)
+    current_direction: Degrees = field(default_factory=lambda: Degrees(0))  # Use Degrees
     status: str = field(default="Ready")
     history: List[str] = field(default_factory=list)
     type: str = field(default="basic")  # Default type
@@ -50,5 +49,5 @@ class Robot:
         return True
 
     def __str__(self):
-        return (f"Name: {self.name}, Position: {repr(self.position)}, Direction: {self.current_direction}, "
+        return (f"Name: {self.name}, Position: {repr(self.position)}, Direction: {self.current_direction.angle}, "
                 f"Status: {self.status}, Shield Level: {self.shield_level}, Ammo: {self.ammo}, Type: {self.type}")

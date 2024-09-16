@@ -1,39 +1,76 @@
 import unittest
-
-
 from main.world_objects.degrees import Degrees
 
 
-class MyTestCase(unittest.TestCase):
-    def test_angle_normalization(self):
-        a = Degrees(400)
-        self.assertEqual(a.angle, 40)
-        a.angle = -30
-        self.assertEqual(a.angle, 330)
+class TestDegrees(unittest.TestCase):
 
-        a.angle = 720
-        self.assertEqual(a.angle, 0)
+    def test_initialization(self):
+        """Test the initialization and normalization of angles."""
+        d1 = Degrees(360)
+        d2 = Degrees(-45)
+        d3 = Degrees(720)
+        d4 = Degrees(450)
 
-        a.angle = -750
-        self.assertEqual(a.angle, 330)
+        self.assertEqual(d1.angle, 0)  # 360 % 360 == 0
+        self.assertEqual(d2.angle, 315)  # -45 % 360 == 315
+        self.assertEqual(d3.angle, 0)  # 720 % 360 == 0
+        self.assertEqual(d4.angle, 90)  # 450 % 360 == 90
 
-    def test_angle_normalize(self):
-        a = Degrees(-10)
-        self.assertEqual(a.angle, 350)
+    def test_angle_setter(self):
+        """Test setting the angle property."""
+        d = Degrees(100)
+        d.angle = 370
+        self.assertEqual(d.angle, 10)  # 370 % 360 == 10
 
-        a.angle = 366
-        self.assertEqual(a.angle, 6)
+    def test_eq(self):
+        """Test equality comparisons."""
+        d1 = Degrees(45)
+        d2 = Degrees(45)
+        d3 = Degrees(90)
+        d4 = Degrees(405)  # 405 % 360 == 45
 
-    def test_degrees(self):
-        a = Degrees(10)
-        self.assertEqual(a.angle, 10)
+        self.assertEqual(d1, d2)  # Same angle
+        self.assertNotEqual(d1, d3)  # Different angle
+        self.assertEqual(d1, d4)  # Equivalent angle
 
-        a.angle = 30
-        self.assertEqual(a.angle, 30)
+    def test_hash(self):
+        """Test that hash values are consistent and handle collisions."""
+        d1 = Degrees(30)
+        d2 = Degrees(30)
+        d3 = Degrees(390)  # 390 % 360 == 30
 
-    def test_degrees_edge(self):
-        a = Degrees(360)
-        self.assertEqual(a.angle, 10)
+        self.assertEqual(hash(d1), hash(d2))  # Same angle
+        self.assertEqual(hash(d1), hash(d3))  # Equivalent angle
+
+    def test_repr(self):
+        """Test the __repr__ method."""
+        d = Degrees(123.456)
+        self.assertEqual(repr(d), "Degrees(angle=123.456)")
+
+    def test_str(self):
+        """Test the __str__ method."""
+        d = Degrees(123.456)
+        self.assertEqual(str(d), "123.456°")
+
+    def test_edge_cases(self):
+        """Test edge cases like very large/small values and non-numeric inputs."""
+        d1 = Degrees(-360000)
+        d2 = Degrees(360000)
+        d3 = Degrees(0)
+        d4 = Degrees(360)
+
+        self.assertEqual(d1.angle, 0)  # -360000 % 360 == 0
+        self.assertEqual(d2.angle, 0)  # 360000 % 360 == 0
+        self.assertEqual(d3.angle, 0)  # 0 % 360 == 0
+        self.assertEqual(d4.angle, 0)  # 360 % 360 == 0
+
+    def test_comparisons_with_non_degrees(self):
+        """Test comparisons with non-Degrees objects."""
+        d = Degrees(45)
+        self.assertNotEqual(d, "string")  # Different type
+        self.assertNotEqual(d, 45)  # Different type
+        self.assertNotEqual(d, object())  # Different type
+
 
 if __name__ == '__main__':
     unittest.main()

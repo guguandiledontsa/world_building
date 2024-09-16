@@ -1,9 +1,9 @@
-from .direction import Direction
-
+from .degrees import Degrees
+from math import isclose
 
 from dataclasses import dataclass, field
 from typing import Tuple, Callable, Dict
-from math import sqrt, cos, sin
+from math import sqrt, cos, sin, radians
 
 
 @dataclass(frozen=True)
@@ -11,21 +11,11 @@ class Position:
     x: float
     y: float
 
-    # Dictionary mapping directions to movement functions
-    direction_movers: Dict[Direction, Callable[[int], Tuple[float, float]]] = field(default_factory=lambda: {
-        Direction.NORTH: (0, 1),
-        Direction.SOUTH: (0, -1),
-        Direction.EAST: (1, 0),
-        Direction.WEST: (-1, 0)
-    })
-
-    def move(self, direction: Direction, steps: int) -> 'Position':
-        mover = self.direction_movers.get(direction)
-        if mover:
-            dx, dy = mover
-            new_position = Position(self.x + dx*steps, self.y + dy*steps)
-            return new_position
-        return self
+    def move(self, angle:'Degrees', steps:int) -> 'Position':
+        rad_angle = radians(angle.angle)
+        dx = steps * cos(rad_angle)
+        dy = steps * sin(rad_angle)
+        return Position(self.x + dx, self.y + dy)
 
     def distance_to(self, other:'Position') -> float:
         """Calculate the distance to another Position."""
@@ -38,14 +28,23 @@ class Position:
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Position):
             return NotImplemented
-        return self.x == other.x and self.y == other.y
+        return isclose(self.x, other.x, abs_tol=1e-9) and isclose(self.y, other.y, abs_tol=1e-9)
 
     def __repr__(self):
         return f"Position(x={self.x}, y={self.y})"
 
     def __str__(self) -> str:
-        return f"({self.x}, {self.y})"
+        # Format x and y values with up to 6 decimal places if needed
+        return f"({self._format_value(self.x)}, {self._format_value(self.y)})"
 
+    @staticmethod
+    def _format_value(value: float) -> str:
+        if abs(value - round(value)) < 1e-6:
+            # If the value is close to an integer, format without decimals
+            return f"{round(value)}"
+        else:
+            # Otherwise, format with up to 6 decimal places
+            return f"{value:.6f}"
     
 if __name__ == "__main__":
-    ... 
+    ...

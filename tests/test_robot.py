@@ -2,8 +2,7 @@ import unittest
 from unittest.mock import patch
 from main.world_objects.robot import Robot
 from main.world_objects.position import Position
-from main.world_objects.direction import Direction
-
+from main.world_objects.degrees import Degrees  # Updated import
 
 class MyTestCase(unittest.TestCase):
     def setUp(self):
@@ -14,7 +13,7 @@ class MyTestCase(unittest.TestCase):
         robot = self.default_robot
         self.assertEqual(robot.name, "TestBot")
         self.assertEqual(robot.position, Position(0, 0))
-        self.assertEqual(robot.current_direction, Direction.NORTH)
+        self.assertEqual(robot.current_direction, Degrees(0))  # Updated to Degrees
         self.assertEqual(robot.status, "Ready")
         self.assertEqual(robot.history, [])
         self.assertEqual(robot.type, "basic")
@@ -52,14 +51,14 @@ class MyTestCase(unittest.TestCase):
 
     def test_update_position_forward(self):
         self.default_robot.position = Position(0, 0)
-        self.default_robot.current_direction = Direction.NORTH
+        self.default_robot.current_direction = Degrees(90)  # Updated to Degrees
         result = self.default_robot.update_position(3, forward=True)
         self.assertTrue(result)
         self.assertEqual(self.default_robot.position, Position(0, 3))
 
     def test_update_position_backward(self):
         self.default_robot.position = Position(0, 0)
-        self.default_robot.current_direction = Direction.NORTH
+        self.default_robot.current_direction = Degrees(90)  # Updated to Degrees
         result = self.default_robot.update_position(3, forward=False)
         self.assertTrue(result)
         self.assertEqual(self.default_robot.position, Position(0, -3))
@@ -68,16 +67,16 @@ class MyTestCase(unittest.TestCase):
     def test_update_position_with_mock(self, mock_move):
         mock_move.return_value = Position(5, 5)
         self.default_robot.position = Position(0, 0)
-        self.default_robot.current_direction = Direction.NORTH
+        self.default_robot.current_direction = Degrees(45)  # Updated to Degrees
         result = self.default_robot.update_position(10, forward=True)
         self.assertTrue(result)
-        mock_move.assert_called_with(Direction.NORTH, 10)
+        mock_move.assert_called_with(Degrees(45), 10)
         self.assertEqual(self.default_robot.position, Position(5, 5))
 
     def test_str_method(self):
         robot = self.default_robot
-        expected_str = ("Name: TestBot, Position: Position(x=0, y=0), Direction: Direction.NORTH, "
-                        "Status: Ready, Shield Level: 5, Ammo: 5, Type: basic")
+        expected_str = (f"Name: TestBot, Position: Position(x=0, y=0), Direction: {robot.current_direction.angle}, "
+                        f"Status: Ready, Shield Level: 5, Ammo: 5, Type: basic")
         self.assertEqual(str(robot), expected_str)
 
     def test_initial_ammo(self):
