@@ -1,16 +1,9 @@
-from math import radians
-
-
-class InvalidAngleError(Exception):
-    """Custom exception for invalid angle input."""
-    pass
-
+from math import radians, isclose
+from functools import lru_cache
 
 class Degrees:
-    _angle_cache = {}
-
     def __init__(self, angle: float):
-        self.angle = angle  # This will call the setter for normalization
+        self._angle = self._normalize_angle(angle)
 
     @property
     def angle(self) -> float:
@@ -18,21 +11,19 @@ class Degrees:
 
     @angle.setter
     def angle(self, angle: float):
-        if not isinstance(angle, (int, float)):
-            raise InvalidAngleError(f"Angle must be a number, got {type(angle).__name__}.")
         self._angle = self._normalize_angle(angle)
 
     @staticmethod
+    @lru_cache(maxsize=None)
     def _normalize_angle(angle: float) -> float:
-        normalized = angle % 360
-        Degrees._angle_cache[angle] = normalized
-        return normalized
+        """Normalize the angle to be within [0, 360)."""
+        return angle % 360
 
     def turn_left(self, degrees: float = 90) -> 'Degrees':
-        return Degrees(self.angle - degrees)
+        return Degrees(self._normalize_angle(self.angle - degrees))
 
     def turn_right(self, degrees: float = 90) -> 'Degrees':
-        return Degrees(self.angle + degrees)
+        return Degrees(self._normalize_angle(self.angle + degrees))
 
     def to_radians(self) -> float:
         return radians(self.angle)
@@ -40,23 +31,13 @@ class Degrees:
     def __eq__(self, other):
         if not isinstance(other, Degrees):
             return NotImplemented
-        return abs(self.angle - other.angle) < 1e-9
+        return isclose(self.angle, other.angle, abs_tol=1e-9)
 
     def __hash__(self):
         return hash(round(self.angle, 9))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Degrees(angle={self.angle})"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.angle}°"
-
-    def __add__(self, other: 'Degrees') -> 'Degrees':
-        if not isinstance(other, Degrees):
-            return NotImplemented
-        return Degrees(self.angle + other.angle)
-
-    def __sub__(self, other: 'Degrees') -> 'Degrees':
-        if not isinstance(other, Degrees):
-            return NotImplemented
-        return Degrees(self.angle - other.angle)
