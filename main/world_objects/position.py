@@ -1,36 +1,25 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from math import sqrt, cos, sin, radians, isclose
-
+from functools import lru_cache
 
 class InvalidPositionError(Exception):
-    """Custom exception for invalid position input."""
     pass
-
-
-class PositionCache:
-    _cache = {}
-
-    @classmethod
-    def get_position(cls, x: float, y: float) -> 'Position':
-        key = (round(x, 6), round(y, 6))  # Round for cache key
-        if key not in cls._cache:
-            cls._cache[key] = Position(x, y)
-        return cls._cache[key]
 
 @dataclass(frozen=True)
 class Position:
-    x: float
-    y: float
+    x: float = field(metadata={'type': (int, float)})
+    y: float = field(metadata={'type': (int, float)})
 
     def __post_init__(self):
         if not isinstance(self.x, (int, float)) or not isinstance(self.y, (int, float)):
             raise InvalidPositionError(f"Coordinates must be numeric, got x: {type(self.x).__name__}, y: {type(self.y).__name__}.")
 
+    @lru_cache(maxsize=None)
     def move(self, angle: 'Degrees', steps: int) -> 'Position':
         rad_angle = radians(angle.angle)
         dx = steps * cos(rad_angle)
         dy = steps * sin(rad_angle)
-        return PositionCache.get_position(self.x + dx, self.y + dy)
+        return Position(self.x + dx, self.y + dy)
 
     def distance_to(self, other: 'Position') -> float:
         return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
@@ -38,6 +27,12 @@ class Position:
     def is_in(self, top_left: 'Position', bottom_right: 'Position') -> bool:
         return (top_left.x <= self.x <= bottom_right.x and
                 bottom_right.y <= self.y <= top_left.y)
+
+    def __add__(self, other: 'Position') -> 'Position':
+        return Position(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other: 'Position') -> 'Position':
+        return Position(self.x - other.x, self.y - other.y)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Position):
