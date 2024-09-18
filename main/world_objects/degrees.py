@@ -10,9 +10,7 @@ class Degrees:
     _angle_cache = {}
 
     def __init__(self, angle: float):
-        if not isinstance(angle, (int, float)):
-            raise InvalidAngleError(f"Angle must be a number, got {type(angle).__name__}.")
-        self._angle = self._normalize_angle(angle)
+        self.angle = angle  # This will call the setter for normalization
 
     @property
     def angle(self) -> float:
@@ -26,17 +24,15 @@ class Degrees:
 
     @staticmethod
     def _normalize_angle(angle: float) -> float:
-        if angle in Degrees._angle_cache:
-            return Degrees._angle_cache[angle]
         normalized = angle % 360
         Degrees._angle_cache[angle] = normalized
         return normalized
 
     def turn_left(self, degrees: float = 90) -> 'Degrees':
-        return Degrees(self._normalize_angle(self.angle - degrees))
+        return Degrees(self.angle - degrees)
 
     def turn_right(self, degrees: float = 90) -> 'Degrees':
-        return Degrees(self._normalize_angle(self.angle + degrees))
+        return Degrees(self.angle + degrees)
 
     def to_radians(self) -> float:
         return radians(self.angle)
@@ -54,3 +50,13 @@ class Degrees:
 
     def __str__(self):
         return f"{self.angle}°"
+
+    def __add__(self, other: 'Degrees') -> 'Degrees':
+        if not isinstance(other, Degrees):
+            return NotImplemented
+        return Degrees(self.angle + other.angle)
+
+    def __sub__(self, other: 'Degrees') -> 'Degrees':
+        if not isinstance(other, Degrees):
+            return NotImplemented
+        return Degrees(self.angle - other.angle)
