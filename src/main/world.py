@@ -17,7 +17,7 @@ class World:
 
     def get_robot(self, name: str) -> Robot:
         """Get a robot by name."""
-        return self.robots.get(name)
+        return self.robots.get(name) # type: ignore
 
     def move_robot(self, name: str, nr_steps: int, forward: bool) -> bool:
         """Move a robot by a certain number of steps."""
@@ -47,27 +47,4 @@ class World:
 
 
 if __name__ == "__main__":
-    # Initialize the world
-    # world = World()
-    # print(world)
-    #
-    # # Spawn some robots
-    # world.spawn_robot(name="Robo1", position=Position(0, 0), direction=Degrees(0), type="scout")
-    # print(world)
-    # world.spawn_robot(name="Robo2", position=Position(5, 5), direction=Degrees(90), type="sniper")
-    # print(world)
-    #
-    # # Move robots
-    # world.move_robot(name="Robo1", nr_steps=10, forward=True)  # Move Robo1 forward by 10 steps
-    # world.turn_robot_left(name="Robo2", degrees=90)  # Turn Robo2 left by 90 degrees
-    #
-    # # List all robots
-    # print(world.list_robots())  # Output: ['Robo1', 'Robo2']
-    #
-    # # Get robot details
-    # robot = world.get_robot(name="Robo1")
-    # print(robot)  # Output: Name: Robo1
-    #
-    # robot = world.get_robot(name="Robo2")
-    # print(robot)  # Output: Name: Robo1
-    pass
+    ...

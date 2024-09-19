@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from math import sqrt, isclose, cos, sin, radians
 from functools import lru_cache
+from math import sqrt, isclose, cos, sin, isnan, isinf
 
 from main.world_objects.degrees import Degrees
 
@@ -21,6 +21,8 @@ class Position:
             raise InvalidPositionError(
                 f"Coordinates must be numeric, got x: {type(self.x).__name__}, y: {type(self.y).__name__}."
             )
+        if isnan(self.x) or isnan(self.y) or isinf(self.x) or isinf(self.y):
+            raise InvalidPositionError("Coordinates cannot be NaN or inf.")
 
     @lru_cache(maxsize=None)
     def distance_to(self, other: 'Position') -> float:
@@ -29,7 +31,7 @@ class Position:
             raise ValueError("The argument must be a Position instance.")
         return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
-    def move(self, angle: 'Degrees', steps: int) -> 'Position':
+    def move(self, angle: 'Degrees', steps: float) -> 'Position':
         """Move the position by a certain number of steps in the specified angle."""
         if not isinstance(angle, Degrees): # type: ignore
             raise ValueError("Angle must be a Degrees instance.")
