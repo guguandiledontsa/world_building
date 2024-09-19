@@ -2,7 +2,6 @@ import unittest
 from main.world import World
 from main.world_objects.position import Position
 from main.world_objects.degrees import Degrees
-from main.world_objects.robot import Robot
 
 class TestWorld(unittest.TestCase):
 
