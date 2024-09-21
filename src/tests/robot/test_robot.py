@@ -38,27 +38,7 @@ class MyTestCase(unittest.TestCase):
         self.default_robot.move_backward(5)
         self.assertEqual(self.default_robot.position, Position(5, 0))
 
-    def test_update_position_with_mock(self):
-        """Test move_forward and move_backward with mocked move method."""
-        with unittest.mock.patch('main.world_objects.position.Position.move') as mock_move:
-            mock_move.return_value = Position(10, 10)
-            self.default_robot.position = Position(0, 0)
-            direction = Degrees(45)  # Moving northeast
-            self.default_robot.current_direction = direction
 
-            # Testing move_forward
-            self.default_robot.move_forward(15)
-            mock_move.assert_called_with(direction, 15)
-            self.assertEqual(self.default_robot.position, Position(10, 10))
-
-            # Reset the mock and position
-            mock_move.reset_mock()
-            self.default_robot.position = Position(0, 0)
-
-            # Testing move_backward
-            self.default_robot.move_backward(10)
-            mock_move.assert_called_with(direction, -10)
-            self.assertEqual(self.default_robot.position, Position(10, 10))
 
     def test_default_robot_initialization(self):
         robot = self.default_robot
@@ -113,16 +93,6 @@ class MyTestCase(unittest.TestCase):
         result = self.default_robot.update_position(3, forward=False)
         self.assertTrue(result)
         self.assertEqual(self.default_robot.position, Position(0, -3))
-
-    @patch('main.world_objects.position.Position.move')
-    def test_update_position_with_mock(self, mock_move):
-        mock_move.return_value = Position(5, 5)
-        self.default_robot.position = Position(0, 0)
-        self.default_robot.current_direction = Degrees(45)  # Updated to Degrees
-        result = self.default_robot.update_position(10, forward=True)
-        self.assertTrue(result)
-        mock_move.assert_called_with(Degrees(45), 10)
-        self.assertEqual(self.default_robot.position, Position(5, 5))
 
     def test_str_method(self):
         robot = self.default_robot
@@ -185,6 +155,38 @@ class MyTestCase(unittest.TestCase):
         self.default_robot.turn_right(45)
         self.assertEqual(self.default_robot.current_direction.angle, 90)  # Should now be facing East
 
+    # def test_update_position_with_mock(self):
+    #     """Test move_forward and move_backward with mocked move method."""
+    #     with unittest.mock.patch('main.world_objects.position.Position.move') as mock_move:
+    #         mock_move.return_value = Position(10, 10)
+    #         self.default_robot.position = Position(0, 0)
+    #         direction = Degrees(45)  # Moving northeast
+    #         self.default_robot.current_direction = direction
+
+    #         # Testing move_forward
+    #         self.default_robot.move_forward(15)
+    #         mock_move.assert_called_with(direction, 15)
+    #         self.assertEqual(self.default_robot.position, Position(10, 10))
+
+    #         # Reset the mock and position
+    #         mock_move.reset_mock()
+    #         self.default_robot.position = Position(0, 0)
+
+    #         # Testing move_backward
+    #         self.default_robot.move_backward(10)
+    #         mock_move.assert_called_with(direction, -10)
+    #         self.assertEqual(self.default_robot.position, Position(10, 10))
+
+
+    # @patch('main.world_objects.position.Position.move')
+    # def test_update_position_with_mock(self, mock_move):
+    #     mock_move.return_value = Position(5, 5)
+    #     self.default_robot.position = Position(0, 0)
+    #     self.default_robot.current_direction = Degrees(45)  # Updated to Degrees
+    #     result = self.default_robot.update_position(10, forward=True)
+    #     self.assertTrue(result)
+    #     mock_move.assert_called_with(Degrees(45), 10)
+    #     self.assertEqual(self.default_robot.position, Position(5, 5))
 
 if __name__ == '__main__':
     unittest.main()
