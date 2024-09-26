@@ -38,6 +38,9 @@ class Robot:
 
     def update_position(self, nr_steps: int, forward: bool) -> bool:
         steps = nr_steps if forward else -nr_steps
+        
+        # fuel
+        
         self.position = self.position.move(self.direction, steps)
         return True
 

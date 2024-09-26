@@ -1,8 +1,6 @@
 import unittest
 import time
 from src.main.world_objects.robot import Robot
-from src.main.world_objects.shield import Shield
-from src.main.world_objects.position import Position
 
 
 class TestShield(unittest.TestCase):

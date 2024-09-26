@@ -9,22 +9,32 @@ from src.main.world_objects.robot import Robot
 class World:
     robots: Dict[str, Robot] = field(default_factory=dict)
 
-    def spawn_robot(self, name: str, position: Position, direction: Degrees, type: str = "basic") -> None:
+    def spawn_robot(
+        self, name: str, position: Position, direction: Degrees, type: str = "basic"
+    ) -> None:
         """Spawn a new robot with the given name, position, direction, and type."""
         if name in self.robots:
             raise ValueError(f"A robot with the name '{name}' already exists.")
-        self.robots[name] = Robot(name=name, position=position, direction=direction, type=type)
+        self.robots[name] = Robot(
+            name=name, position=position, direction=direction, type=type
+        )
 
     def get_robot(self, name: str) -> Robot:
         """Get a robot by name."""
-        return self.robots.get(name) # type: ignore
+        return self.robots.get(name)  # type: ignore
 
-    def move_robot(self, name: str, nr_steps: int, forward: bool) -> bool:
+    def move_robot(self, name: str, steps: int, forward: bool) -> bool:
         """Move a robot by a certain number of steps."""
         robot = self.get_robot(name)
         if robot:
-            return robot.update_position(nr_steps, forward)
+            return robot.update_position(steps, forward)
         return False
+
+    def move_robot_forward(self, name: str, steps: int = 0):
+        return self.move_robot(name=name, steps=steps, forward=True)
+
+    def move_robot_back(self, name: str, steps: int = 0):
+        return self.move_robot(name=name, steps=steps, forward=False)
 
     def turn_robot_left(self, name: str, degrees: float = 90) -> None:
         """Turn a robot left by a certain number of degrees."""

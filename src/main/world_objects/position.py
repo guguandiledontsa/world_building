@@ -35,9 +35,7 @@ class Position:
             raise ValueError("Angle must be a Degrees instance.")
 
         rad_angle = angle.to_radians()
-        dx = steps * cos(rad_angle)
-        dy = steps * sin(rad_angle)
-        return Position(self.x + dx, self.y + dy)
+        return Position(self.x + steps * cos(rad_angle), self.y + steps * sin(rad_angle))
 
     def is_in(self, top_left: "Position", bottom_right: "Position") -> bool:
         """Check if the position is within a defined rectangular area."""
