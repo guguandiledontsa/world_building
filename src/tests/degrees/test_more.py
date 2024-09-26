@@ -12,22 +12,22 @@ specific degrees, and caching behavior of the normalization function. """
 
 class TestDegrees(unittest.TestCase):
 
-    # def test_initialization(self):
-    #     """Test the initialization and normalization of angles."""
-    #     test_cases = [
-    #         (360, 0),
-    #         (-45, 315),
-    #         (720, 0),
-    #         (450, 90),
-    #         (0, 0),
-    #         (180, 180),
-    #         (-720, 0),
-    #         (1080, 360)  # Should normalize to 0
-    #     ]
-    #     for angle, expected in test_cases:
-    #         with self.subTest(angle=angle):
-    #             d = Degrees(angle)
-    #             self.assertEqual(d.angle, expected)
+    def test_initialization(self):
+        """Test the initialization and normalization of angles."""
+        test_cases = [
+            (360, 0),
+            (-45, 315),
+            (720, 0),
+            (450, 90),
+            (0, 0),
+            (180, 180),
+            (-720, 0),
+            (1080, 0)  # Should normalize to 0
+        ]
+        for angle, expected in test_cases:
+            with self.subTest(angle=angle):
+                d = Degrees(angle)
+                self.assertEqual(d.angle, expected)
 
     def test_angle_setter(self):
         """Test angle normalization with setter method."""
@@ -86,13 +86,13 @@ class TestDegrees(unittest.TestCase):
                 d = Degrees(angle)
                 self.assertEqual(d.angle, expected)
 
-    # def test_invalid_angle(self):
-    #     """Test invalid angle handling."""
-    #     invalid_angles = ['not a number', None, float('nan'), float('inf'), -float('inf')] # type: ignore
-    #     for angle in invalid_angles: # type: ignore
-    #         with self.subTest(angle=angle):
-    #             with self.assertRaises(InvalidAngleError):
-    #                 Degrees(angle) # type: ignore
+    def test_invalid_angle(self):
+        """Test invalid angle handling."""
+        invalid_angles = ['not a number', None, float('nan'), float('inf'), -float('inf')] # type: ignore
+        for angle in invalid_angles: # type: ignore
+            with self.subTest(angle=angle):
+                with self.assertRaises(InvalidAngleError):
+                    Degrees(angle) # type: ignore
 
     def test_comparisons_with_non_degrees(self):
         """Test comparisons with non-Degrees objects."""

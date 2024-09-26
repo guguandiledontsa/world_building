@@ -32,7 +32,7 @@ class TestWorld(unittest.TestCase):
         self.world.spawn_robot(
             name="MoverBot", position=Position(0, 0), direction=Degrees(0)
         )
-        self.world.move_robot(name="MoverBot", nr_steps=10, forward=True)
+        self.world.move_robot(name="MoverBot", steps=10, forward=True)
         robot = self.world.get_robot(name="MoverBot")
         self.assertEqual(robot.position, Position(10, 0))
 

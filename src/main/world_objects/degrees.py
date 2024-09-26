@@ -1,3 +1,5 @@
+from math import isinf, isnan
+
 from dataclasses import dataclass, field
 from math import radians, isclose
 from functools import lru_cache
@@ -12,6 +14,11 @@ class Degrees:
 
     def __post_init__(self):
         # Normalize the angle using the setter
+
+
+        if not isinstance(self._angle, (int, float)) or isinf(self.angle) or isnan(self.angle):
+            raise InvalidAngleError
+
         object.__setattr__(self, '_angle', self._normalize_angle(self._angle))
 
     @property
