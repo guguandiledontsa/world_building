@@ -1,6 +1,7 @@
 import unittest
-from main.world_objects.position import Position
+from src.main.world_objects.position import Position
 from math import sqrt
+
 
 class MyTestCase(unittest.TestCase):
     def test_distance_to_same_position(self):
@@ -19,7 +20,7 @@ class MyTestCase(unittest.TestCase):
         """Test distance from a position to the origin (0, 0)."""
         p = Position(3, 4)
         origin = Position(0, 0)
-        expected_distance = sqrt(3 ** 2 + 4 ** 2)
+        expected_distance = sqrt(3**2 + 4**2)
         self.assertAlmostEqual(p.distance_to(origin), expected_distance)
 
     def test_distance_negative_coordinates(self):
@@ -40,8 +41,11 @@ class MyTestCase(unittest.TestCase):
         """Test distance to verify precision with floating-point numbers."""
         p1 = Position(1.000001, 1.000001)
         p2 = Position(1.000002, 1.000002)
-        expected_distance = sqrt((1.000002 - 1.000001) ** 2 + (1.000002 - 1.000001) ** 2)
+        expected_distance = sqrt(
+            (1.000002 - 1.000001) ** 2 + (1.000002 - 1.000001) ** 2
+        )
         self.assertAlmostEqual(p1.distance_to(p2), expected_distance, places=6)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

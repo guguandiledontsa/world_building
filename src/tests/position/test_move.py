@@ -1,8 +1,8 @@
 import unittest
 from math import radians, cos, sin, isclose
 
-from main.world_objects.position import Position
-from main.world_objects.degrees import Degrees
+from src.main.world_objects.position import Position
+from src.main.world_objects.degrees import Degrees
 
 
 class TestPosition(unittest.TestCase):
@@ -62,7 +62,6 @@ class TestPosition(unittest.TestCase):
         self.assertTrue(isclose(new_pos.x, 15, abs_tol=1e-9))
         self.assertTrue(isclose(new_pos.y, 10, abs_tol=1e-9))
 
-
     def test_move_without_direction(self):
         # Move North (90 degrees) by 2 steps
         pos_after_north = self.start_pos.move(Degrees(90), 2)
@@ -108,5 +107,5 @@ class TestPosition(unittest.TestCase):
         self.assertTrue(isclose(new_pos.y, expected_y, abs_tol=1e-9))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

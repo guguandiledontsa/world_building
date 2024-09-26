@@ -1,11 +1,11 @@
 import unittest
-from main.world_objects.position import Position
+from src.main.world_objects.position import Position
 
 
 class MyTestCase(unittest.TestCase):
     def test_eq_other_object(self):
         """Test inequality with a non-Position object."""
-        self.assertFalse(Position(1,2) == (1, 2))  # Compare with a tuple
+        self.assertFalse(Position(1, 2) == (1, 2))  # Compare with a tuple
 
     def test_eq_not_position(self):
         """Test inequality with an object of a different class."""
@@ -17,6 +17,5 @@ class MyTestCase(unittest.TestCase):
         self.assertTrue(a == Position(1, 2))
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

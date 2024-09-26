@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from math import sqrt, isclose, cos, sin, isnan, isinf
 
-from main.world_objects.degrees import Degrees
+from src.main.world_objects.degrees import Degrees
 
 
 class InvalidPositionError(Exception):
@@ -17,23 +17,21 @@ class Position:
 
     def __post_init__(self):
         # Check if coordinates are numeric
-        if not isinstance(self.x, (int, float)) or not isinstance(self.y, (int, float)): # type: ignore
+        if not isinstance(self.x, (int, float)) or not isinstance(self.y, (int, float)) or isnan(self.x) or isnan(self.y) or isinf(self.x) or isinf(self.y):  # type: ignore
             raise InvalidPositionError(
                 f"Coordinates must be numeric, got x: {type(self.x).__name__}, y: {type(self.y).__name__}."
             )
-        if isnan(self.x) or isnan(self.y) or isinf(self.x) or isinf(self.y):
-            raise InvalidPositionError("Coordinates cannot be NaN or inf.")
 
     @lru_cache(maxsize=None)
-    def distance_to(self, other: 'Position') -> float:
+    def distance_to(self, other: "Position") -> float:
         """Calculate the distance to another Position."""
-        if not isinstance(other, Position): # type: ignore
+        if not isinstance(other, Position):  # type: ignore
             raise ValueError("The argument must be a Position instance.")
         return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
-    def move(self, angle: 'Degrees', steps: float) -> 'Position':
+    def move(self, angle: "Degrees", steps: float) -> "Position":
         """Move the position by a certain number of steps in the specified angle."""
-        if not isinstance(angle, Degrees): # type: ignore
+        if not isinstance(angle, Degrees):  # type: ignore
             raise ValueError("Angle must be a Degrees instance.")
 
         rad_angle = angle.to_radians()
@@ -41,22 +39,24 @@ class Position:
         dy = steps * sin(rad_angle)
         return Position(self.x + dx, self.y + dy)
 
-    def is_in(self, top_left: 'Position', bottom_right: 'Position') -> bool:
+    def is_in(self, top_left: "Position", bottom_right: "Position") -> bool:
         """Check if the position is within a defined rectangular area."""
-        if not all(isinstance(p, Position) for p in [top_left, bottom_right]): # type: ignore
+        if not all(isinstance(p, Position) for p in [top_left, bottom_right]):  # type: ignore
             raise ValueError("Top left and bottom right must be Position instances.")
-        return (top_left.x <= self.x <= bottom_right.x and
-                bottom_right.y <= self.y <= top_left.y)
+        return (
+            top_left.x <= self.x <= bottom_right.x
+            and bottom_right.y <= self.y <= top_left.y
+        )
 
-    def __add__(self, other: 'Position') -> 'Position':
+    def __add__(self, other: "Position") -> "Position":
         """Add two positions."""
-        if not isinstance(other, Position): # type: ignore
+        if not isinstance(other, Position):  # type: ignore
             raise ValueError("The argument must be a Position instance.")
         return Position(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other: 'Position') -> 'Position':
+    def __sub__(self, other: "Position") -> "Position":
         """Subtract two positions."""
-        if not isinstance(other, Position): # type: ignore
+        if not isinstance(other, Position):  # type: ignore
             raise ValueError("The argument must be a Position instance.")
         return Position(self.x - other.x, self.y - other.y)
 
@@ -64,7 +64,9 @@ class Position:
         """Check equality of two positions."""
         if not isinstance(other, Position):
             return NotImplemented
-        return isclose(self.x, other.x, abs_tol=1e-9) and isclose(self.y, other.y, abs_tol=1e-9)
+        return isclose(self.x, other.x, abs_tol=1e-9) and isclose(
+            self.y, other.y, abs_tol=1e-9
+        )
 
     def __repr__(self):
         return f"Position(x={self.x}, y={self.y})"

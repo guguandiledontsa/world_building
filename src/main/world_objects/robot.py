@@ -1,30 +1,19 @@
 from dataclasses import dataclass, field
-from typing import List
-from main.world_objects.position import Position
-from main.world_objects.degrees import Degrees  # Import Degrees instead of Direction
-from main.world_objects.shield import Shield
-
+from src.main.world_objects.position import Position
+from src.main.world_objects.degrees import Degrees
+from src.main.world_objects.shield import Shield
+from src.main.world_objects.weapon import Weapon, WeaponError
 
 @dataclass
 class Robot:
     name: str
     position: Position = field(default_factory=lambda: Position(0, 0))
-    current_direction: Degrees = field(default_factory=lambda: Degrees(0))  # Use Degrees
-    status: str = field(default="Ready")
-    history: List[str] = field(default_factory=list)
-    type: str = field(default="basic")  # Default type
-    shield: Shield = field(default_factory=lambda: Shield(shield_max=5))  # Initialize the Shield
-
-    # Attributes with default values for non-specialized robots
-    shot_damage: int = field(default=1)
-    initial_ammo: int = field(default=5)
-    ammo: int = field(init=False)
-    repair_delay: int = field(default=5)
-    reload_delay: int = field(default=5)
-    is_reloading: bool = field(default=False)
+    direction: Degrees = field(default_factory=lambda: Degrees(0))
+    shield: Shield = field(default_factory=lambda: Shield(shield_max=5))
+    weapon: Weapon = field(default_factory=lambda: Weapon(_ammo=5))
+    type: str = field(default="basic")
 
     def __post_init__(self):
-        self.ammo = self.initial_ammo
         self.set_attributes_based_on_type()
 
     def set_attributes_based_on_type(self):
@@ -33,48 +22,59 @@ class Robot:
             "sniper": (5, 1, 1, 4, 5),
             "tank": (3, 5, 5, 5, 3),
             "assault": (2, 3, 3, 3, 3),
-            "support": (1, 4, 2, 3, 2)
+            "support": (1, 4, 2, 3, 2),
         }
         if self.type in type_attributes:
-            self.shot_damage, self.initial_ammo, self.shield.shield_max, self.repair_delay, self.reload_delay = type_attributes[self.type]
-            self.ammo = self.initial_ammo
-            self.shield.shield_max = self.shield.shield_max  # Set max shield
-            self.shield.set_shield_level(self.shield.shield_max)  # Reset shield level
+            (
+                shot_damage,
+                ammo_max,
+                shield_max,
+                repair_delay,
+                reload_delay,
+            ) = type_attributes[self.type]
+            self.weapon = Weapon(_ammo=ammo_max,_load_delay=reload_delay, _damage=shot_damage)
+            self.shield = Shield(shield_max=shield_max, repair_delay=repair_delay)
 
     def update_position(self, nr_steps: int, forward: bool) -> bool:
         steps = nr_steps if forward else -nr_steps
-        new_position = self.position.move(self.current_direction, steps)
-        self.position = new_position
+        self.position = self.position.move(self.direction, steps)
         return True
 
     def move_forward(self, nr_steps: int) -> bool:
-        """Move the robot forward by a given number of steps."""
         return self.update_position(nr_steps, forward=True)
 
     def move_backward(self, nr_steps: int) -> bool:
-        """Move the robot backward by a given number of steps."""
         return self.update_position(nr_steps, forward=False)
 
     def turn_left(self, degrees: float = 90) -> None:
-        """Turn the robot left by the given number of degrees."""
-        self.current_direction = self.current_direction.turn_left(degrees)
+        self.direction = self.direction.turn_left(degrees)
 
     def turn_right(self, degrees: float = 90) -> None:
-        """Turn the robot right by the given number of degrees."""
-        self.current_direction = self.current_direction.turn_right(degrees)
+        self.direction = self.direction.turn_right(degrees)
 
     def damage_shield(self, damage: int) -> None:
-        """Apply damage to the shield."""
-        self.shield.damage_shield(damage)
+        self.shield.take_damage(damage)
 
     def repair_shield(self) -> None:
-        """Initiate repair of the shield."""
-        self.shield.repair_shield()
+        self.shield.repair()
+
+    def shoot(self) -> None:
+        try:
+            self.weapon = self.weapon.shot()
+        except WeaponError as e:
+            print(f"Weapon Error: {e}")
+
+    def reload(self) -> None:
+        try:
+            self.weapon = self.weapon.reload()
+        except WeaponError as e:
+            print(f"Weapon Error: {e}")
 
     def get_shield_level(self) -> int:
-        """Return the current shield level."""
-        return self.shield.get_shield_level()
+        return self.shield.level
 
     def __str__(self):
-        return (f"Name: {self.name}, Position: {repr(self.position)}, Direction: {self.current_direction.angle}, "
-                f"Status: {self.status}, Shield Level: {self.get_shield_level()}, Ammo: {self.ammo}, Type: {self.type}")
+        return (
+            f"Name: {self.name}, Position: {self.position}, Direction: {self.direction.angle}, "
+            f"Shield Level: {self.get_shield_level()}, Ammo: {self.weapon.ammo}, Type: {self.type}"
+        )

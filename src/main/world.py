@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Dict, List
-from main.world_objects.position import Position
-from main.world_objects.degrees import Degrees
-from main.world_objects.robot import Robot
+from src.main.world_objects.position import Position
+from src.main.world_objects.degrees import Degrees
+from src.main.world_objects.robot import Robot
 
 
 @dataclass
@@ -13,7 +13,7 @@ class World:
         """Spawn a new robot with the given name, position, direction, and type."""
         if name in self.robots:
             raise ValueError(f"A robot with the name '{name}' already exists.")
-        self.robots[name] = Robot(name=name, position=position, current_direction=direction, type=type)
+        self.robots[name] = Robot(name=name, position=position, direction=direction, type=type)
 
     def get_robot(self, name: str) -> Robot:
         """Get a robot by name."""

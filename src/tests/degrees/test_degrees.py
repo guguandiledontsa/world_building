@@ -1,5 +1,5 @@
 import unittest
-from main.world_objects.degrees import Degrees
+from src.main.world_objects.degrees import Degrees
 
 
 class TestDegrees(unittest.TestCase):
@@ -71,7 +71,6 @@ class TestDegrees(unittest.TestCase):
         self.assertNotEqual(d, 45)  # Different type
         self.assertNotEqual(d, object())  # Different type
 
-
     def test_turn_left(self):
         """Test turning left by 90 degrees."""
         d = Degrees(90)
@@ -105,5 +104,5 @@ class TestDegrees(unittest.TestCase):
         self.assertEqual(new_d.angle, 90)  # 45 + 45 = 90
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

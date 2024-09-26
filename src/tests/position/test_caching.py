@@ -1,7 +1,8 @@
 import unittest
 from math import sqrt
 
-from main.world_objects.position import Position
+from src.main.world_objects.position import Position
+
 
 class TestCacheBehavior(unittest.TestCase):
 
@@ -11,7 +12,6 @@ class TestCacheBehavior(unittest.TestCase):
         self.pos2 = Position(4.0, 6.0)
         # Clear the Position's cache
         self.pos1.distance_to.cache_clear()
-
 
     def test_position_distance_cache_behavior(self):
         # Test cache behavior for Position's distance_to method
@@ -42,5 +42,6 @@ class TestCacheBehavior(unittest.TestCase):
         self.pos1.distance_to.cache_clear()
         self.assertEqual(self.pos1.distance_to.cache_info().currsize, 0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

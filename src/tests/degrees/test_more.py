@@ -1,5 +1,5 @@
 import unittest
-from main.world_objects.degrees import Degrees, InvalidAngleError
+from src.main.world_objects.degrees import Degrees, InvalidAngleError
 
 """ The `class TestDegrees` is a test case class that contains multiple test
 methods to test the functionality of the `Degrees` class. Each test method
@@ -8,6 +8,8 @@ within this test case class focuses on testing specific aspects of the
 comparisons, hash values, string representations, edge cases, invalid angle
 handling, comparisons with non-Degrees objects, turning left and right by
 specific degrees, and caching behavior of the normalization function. """
+
+
 class TestDegrees(unittest.TestCase):
 
     # def test_initialization(self):
@@ -77,7 +79,7 @@ class TestDegrees(unittest.TestCase):
             (720, 0),
             (-720, 0),
             (999999999, 279),  # 999999999 % 360 == 279
-            (-999999999, 81)  # -999999999 % 360 == 81
+            (-999999999, 81),  # -999999999 % 360 == 81
         ]
         for angle, expected in test_cases:
             with self.subTest(angle=angle):
@@ -167,5 +169,6 @@ class TestDegrees(unittest.TestCase):
     #     self.assertIs(d1.angle, d2.angle)  # 370 % 360 == 10 and 730 % 360 == 10
     #     self.assertIs(d1.angle, d3.angle)  # -450 % 360 == 270 and should not be the same instance
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

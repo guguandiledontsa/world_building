@@ -1,5 +1,5 @@
 import unittest
-from main.world_objects.position import Position
+from src.main.world_objects.position import Position
 
 
 class TestPosition(unittest.TestCase):
@@ -46,8 +46,6 @@ class TestPosition(unittest.TestCase):
         a = Position(1, 2)
         b = Position(1, 2)
         self.assertTrue(a == b)
-
-
 
 
 if __name__ == "__main__":
