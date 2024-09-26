@@ -29,7 +29,8 @@ class Shield:
     def repair_shield(self) -> None:
         """Initiate a repair of the shield after a delay."""
         with self.lock:
-            if self.level < self.shield_max and not self._is_repairing:
+            current_level = self.level if self.level is not None else 0
+            if current_level < self.shield_max and not self._is_repairing:
                 object.__setattr__(self, '_is_repairing', True)
                 threading.Timer(self.repair_delay, self._finish_repair).start()
 
@@ -42,7 +43,8 @@ class Shield:
     def damage_shield(self, damage: int) -> 'Shield':
         """Apply damage to the shield, returning a new Shield instance with updated level."""
         with self.lock:
-            new_level = max(self.level - damage, 0)
+            current_level = self.level if self.level is not None else 0
+            new_level = max(current_level - damage, 0)
             return Shield(level=new_level, shield_max=self.shield_max, repair_delay=self.repair_delay)
 
     def __eq__(self, other: object) -> bool:
@@ -60,8 +62,10 @@ class Shield:
         return (f"Shield Level: {self.level}/{self.shield_max}, "
                 f"Repairing: {self.is_repairing}")
 
-    # def __lt__(self, other: 'object') -> bool:
-    #     """Compare shields based on their shield levels."""
-    #     if not isinstance(other, Shield):
-    #         return NotImplemented
-    #     return self.level < other.level
+    def __lt__(self, other: 'object') -> bool:
+        """Compare shields based on their shield levels."""
+        if not isinstance(other, Shield):
+            return NotImplemented
+        a = self.level if self.level is not None else 0
+        b = other.level if other.level is not None else 0
+        return a < b

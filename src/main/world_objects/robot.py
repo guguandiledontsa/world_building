@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Optional
 from src.main.world_objects.position import Position
 from src.main.world_objects.degrees import Degrees
 from src.main.world_objects.shield import Shield
@@ -53,10 +54,10 @@ class Robot:
         self.direction = self.direction.turn_right(degrees)
 
     def damage_shield(self, damage: int) -> None:
-        self.shield.take_damage(damage)
+        self.shield.damage_shield(damage)
 
     def repair_shield(self) -> None:
-        self.shield.repair()
+        self.shield.repair_shield()
 
     def shoot(self) -> None:
         try:
@@ -70,7 +71,7 @@ class Robot:
         except WeaponError as e:
             print(e)
 
-    def get_shield_level(self) -> int:
+    def get_shield_level(self) -> Optional[int]:
         return self.shield.level
 
     def __str__(self):
