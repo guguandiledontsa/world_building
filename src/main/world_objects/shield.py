@@ -42,7 +42,7 @@ class Shield:
     def damage_shield(self, damage: int) -> 'Shield':
         """Apply damage to the shield, returning a new Shield instance with updated level."""
         with self.lock:
-            new_level:int = max(self.level - damage, 0)
+            new_level = max(self.level - damage, 0)
             return Shield(level=new_level, shield_max=self.shield_max, repair_delay=self.repair_delay)
 
     def __eq__(self, other: object) -> bool:
@@ -56,12 +56,12 @@ class Shield:
         """Return the hash based on shield level and max."""
         return hash((self.level, self.shield_max))
 
-    def __lt__(self, other: 'object') -> bool:
-        """Compare shields based on their shield levels."""
-        if not isinstance(other, Shield):
-            return NotImplemented
-        return self.level < other.level
-
     def __str__(self) -> str:
         return (f"Shield Level: {self.level}/{self.shield_max}, "
                 f"Repairing: {self.is_repairing}")
+
+    # def __lt__(self, other: 'object') -> bool:
+    #     """Compare shields based on their shield levels."""
+    #     if not isinstance(other, Shield):
+    #         return NotImplemented
+    #     return self.level < other.level

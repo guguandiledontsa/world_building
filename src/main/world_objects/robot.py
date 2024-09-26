@@ -32,7 +32,7 @@ class Robot:
                 repair_delay,
                 reload_delay,
             ) = type_attributes[self.type]
-            self.weapon = Weapon(_ammo=ammo_max,_load_delay=reload_delay, _damage=shot_damage)
+            self.weapon = Weapon(_ammo=ammo_max,_load_delay=reload_delay, _damage=shot_damage, _ammo_max=ammo_max)
             self.shield = Shield(shield_max=shield_max, repair_delay=repair_delay)
 
     def update_position(self, nr_steps: int, forward: bool) -> bool:
@@ -68,7 +68,7 @@ class Robot:
         try:
             self.weapon = self.weapon.reload()
         except WeaponError as e:
-            print(f"Weapon Error: {e}")
+            print(e)
 
     def get_shield_level(self) -> int:
         return self.shield.level
