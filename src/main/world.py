@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, List
+
+from src.main.world_objects.fuel_tank import FuelTank
 from src.main.world_objects.position import Position
 from src.main.world_objects.degrees import Degrees
 from src.main.world_objects.robot import Robot
@@ -11,14 +13,14 @@ class World:
     robots: Dict[str, Robot] = field(default_factory=dict)
 
     def spawn_robot(
-        self, name: str, position: Position, direction: Degrees, type: str = "basic"
+        self, name: str, position: Position, direction: Degrees, robot_type: str = "basic", tank: 'FuelTank'= FuelTank()
     ) -> Robot:
         """Spawn a new robot with the given name, position, direction, and type."""
         name = name.lower()
         if name in self.robots:
             raise ValueError(f"A robot with the name '{name}' already exists.")
         self.robots[name] = Robot(
-            name=name, position=position, direction=direction, type=type
+            name=name, position=position, direction=direction, type=robot_type, tank=tank
         )
         return self.robots[name]
 
@@ -33,10 +35,12 @@ class World:
         if robot:
             return robot.update_position(steps, forward)
         return False
+
     def move_robot_forward(self, name: str, steps: int = 0):
         return self.move_robot(name=name, steps=steps, forward=True)
     def move_robot_back(self, name: str, steps: int = 0):
         return self.move_robot(name=name, steps=steps, forward=False)
+
     def turn_robot_left(self, name: str, degrees: float = 90) -> None:
         """Turn a robot left by a certain number of degrees."""
         robot = self.get_robot(name)
@@ -87,6 +91,7 @@ class World:
                 bot.damage_shield(gun.damage)  # Apply damage, adjust as needed
                 # targets_hit.append(bot.name)
                 # bot.set_status(f"{bot.name} was shot.")
+                return
 
 
     def __str__(self):

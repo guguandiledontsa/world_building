@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
+
+from src.main.world_objects.fuel_tank import FuelTank
 from src.main.world_objects.position import Position
 from src.main.world_objects.degrees import Degrees
 from src.main.world_objects.shield import Shield
@@ -12,6 +14,7 @@ class Robot:
     direction: Degrees = field(default_factory=lambda: Degrees(0))
     shield: Shield = field(default_factory=lambda: Shield(shield_max=5))
     weapon: Weapon = field(default_factory=lambda: Weapon(_ammo=5))
+    tank: FuelTank = field(default_factory=lambda: FuelTank(volume=50))
     type: str = field(default="basic")
 
     def __post_init__(self):
@@ -39,14 +42,17 @@ class Robot:
     def update_position(self, nr_steps: int, forward: bool) -> bool:
         steps = nr_steps if forward else -nr_steps
         
-        # fuel
+        try:
+            self.tank = self.tank.drop_fuel(distance=nr_steps)
+        except ValueError:
+            print("not enough fuel")
+            return False
         
         self.position = self.position.move(self.direction, steps)
         return True
 
     def move_forward(self, nr_steps: int) -> bool:
         return self.update_position(nr_steps, forward=True)
-
     def move_backward(self, nr_steps: int) -> bool:
         return self.update_position(nr_steps, forward=False)
 
@@ -66,9 +72,7 @@ class Robot:
         try:
             self.weapon = self.weapon.shot()
         except WeaponError as e:
-            print(f"Weapon Error: {e}")
-
-
+            print(f"{e}")
 
     def reload(self) -> None:
         try:
@@ -76,11 +80,20 @@ class Robot:
         except WeaponError as e:
             print(e)
 
-    def get_shield_level(self) -> Optional[int]:
+    def shield_level(self) -> Optional[int]:
         return self.shield.level
+
+    def tank_level(self) -> float:
+        return self.tank.level
+
+    def refuel(self) -> None:
+        try:
+            self.tank = self.tank.refuel()
+        except ValueError as e:
+            print(e)
 
     def __str__(self):
         return (
             f"Name: {self.name}, Position: {self.position}, Direction: {self.direction.angle}, "
-            f"Shield Level: {self.get_shield_level()}, Ammo: {self.weapon.ammo}, Type: {self.type}"
+            f"Shield Level: {self.shield_level()}, Ammo: {self.weapon.ammo}, Fuel Level: {self.tank_level()}, Type: {self.type}"
         )

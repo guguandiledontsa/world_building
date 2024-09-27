@@ -2,8 +2,6 @@ import unittest
 from src.main.world import World
 from src.main.world_objects.position import Position
 from src.main.world_objects.degrees import Degrees
-from src.main.world_objects.robot import Robot
-
 
 class TestWorld(unittest.TestCase):
 
@@ -12,7 +10,7 @@ class TestWorld(unittest.TestCase):
 
     def test_spawn_robot(self):
         self.world.spawn_robot(
-            name="TestBot", position=Position(0, 0), direction=Degrees(90), type="scout"
+            name="TestBot", position=Position(0, 0), direction=Degrees(90), robot_type="scout"
         )
         robot = self.world.get_robot(name="TestBot")
         self.assertIsNotNone(robot)
@@ -78,8 +76,6 @@ class TestWorld(unittest.TestCase):
 
     def test_world_shoot(self):
         bot1 = self.world.spawn_robot("Bot1", position=Position(0, 0), direction=Degrees(90))
-        bot2 = self.world.spawn_robot("Bot2", position=Position(0, 10), direction=Degrees(270))
-
         self.world.shoot(shooter_name="Bot1")
 
         self.assertTrue(self.world.get_robot(name="Bot2").shield<bot1.shield)
@@ -87,6 +83,33 @@ class TestWorld(unittest.TestCase):
         self.world.shoot(shooter_name="Bot2")
         self.assertEqual(self.world.get_robot(name="Bot2").shield, bot1.shield)
 
+    def test_fuel(self):
+        bot = self.world.spawn_robot("Bot1", position=Position(0, 0), direction=Degrees(0))
+        self.assertEqual(bot.tank_level(), 100)
+        bot.move_forward(1)
+        self.assertEqual(100-0.25, bot.tank_level())
+
+    def test_fuel_refuel(self):
+        bot = self.world.spawn_robot("Bot1", position=Position(0, 0), direction=Degrees(0))
+        self.assertEqual(bot.tank_level(), 100)
+        bot.move_forward(100)
+        self.assertEqual(100-100*0.25, bot.tank_level())
+        bot.refuel()
+        self.assertEqual(bot.tank_level(), 100)
+
+    def test_refuel_when_full(self):
+        bot = self.world.spawn_robot(name="Bot1", position=Position(0, 0), direction=Degrees(0))
+        with self.assertRaises(ValueError):
+            bot.tank.refuel()
+
+    def test_fuel_move_refuse(self):
+        self.world.spawn_robot("Bot1", position=Position(0, 0), direction=Degrees(0))
+        bot = self.world.get_robot(name="Bot1")
+        self.assertEqual(100, bot.tank_level())
+        steps = 1000
+        self.world.move_robot_forward(name="bot1", steps=steps)
+        self.assertEqual(100, bot.tank_level())
+        self.assertEqual(Position(0, 0), bot.position)
 
 
 if __name__ == "__main__":

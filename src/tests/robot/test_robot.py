@@ -99,7 +99,7 @@ class MyTestCase(unittest.TestCase):
         robot = self.default_robot
         expected_str = (
             f"Name: TestBot, Position: (0, 0), Direction: {robot.direction.angle}, "
-            f"Shield Level: 5, Ammo: 5, Type: basic"
+            f"Shield Level: 5, Ammo: 5, Fuel Level: 50, Type: basic"
         )
         self.assertEqual(str(robot), expected_str)
 
