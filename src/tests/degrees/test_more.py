@@ -1,5 +1,5 @@
 import unittest
-from src.main.world_objects.degrees import Degrees, InvalidAngleError
+from src.main.world_objects.robot_objects.degrees import Degrees, InvalidAngleError
 
 """ The `class TestDegrees` is a test case class that contains multiple test
 methods to test the functionality of the `Degrees` class. Each test method
@@ -33,7 +33,7 @@ class TestDegrees(unittest.TestCase):
         """Test angle normalization with setter method."""
         d = Degrees(100)
         with self.assertRaises(AttributeError):
-            d.angle = 370  # type: ignore # Should raise error because angle is read-only
+            d.angle = 370  # # Should raise error because angle is read-only
 
     def test_eq(self):
         """Test equality comparisons."""
@@ -88,11 +88,11 @@ class TestDegrees(unittest.TestCase):
 
     def test_invalid_angle(self):
         """Test invalid angle handling."""
-        invalid_angles = ['not a number', None, float('nan'), float('inf'), -float('inf')] # type: ignore
-        for angle in invalid_angles: # type: ignore
+        invalid_angles = ['not a number', None, float('nan'), float('inf'), -float('inf')] #
+        for angle in invalid_angles: #
             with self.subTest(angle=angle):
                 with self.assertRaises(InvalidAngleError):
-                    Degrees(angle) # type: ignore
+                    Degrees(angle) #
 
     def test_comparisons_with_non_degrees(self):
         """Test comparisons with non-Degrees objects."""

@@ -3,8 +3,8 @@ import unittest
 from unittest.mock import patch
 
 from src.main.world_objects.robot import Robot
-from src.main.world_objects.position import Position
-from src.main.world_objects.degrees import Degrees  # Updated import
+from src.main.world_objects.robot_objects.position import Position
+from src.main.world_objects.robot_objects.degrees import Degrees  # Updated import
 
 
 class MyTestCase(unittest.TestCase):
@@ -169,7 +169,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_update_position_with_mock(self):
         """Test move_forward and move_backward with mocked move method."""
-        with mock.patch('src.main.world_objects.position.Position.move') as mock_move:
+        with mock.patch('src.main.world_objects.robot_objects.position.Position.move') as mock_move:
             mock_move.return_value = Position(10, 10)
             self.default_robot.position = Position(0, 0)
             direction = Degrees(45)  # Moving northeast
@@ -189,7 +189,7 @@ class MyTestCase(unittest.TestCase):
             mock_move.assert_called_with(direction, -10)
             self.assertEqual(self.default_robot.position, Position(10, 10))
 
-    @patch('src.main.world_objects.position.Position.move')
+    @patch('src.main.world_objects.robot_objects.position.Position.move')
     def test_update_position_with_mock1(self, mock_move):
         mock_move.return_value = Position(5, 5)
         self.default_robot.position = Position(0, 0)

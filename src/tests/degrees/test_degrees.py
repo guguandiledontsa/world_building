@@ -1,5 +1,5 @@
 import unittest
-from src.main.world_objects.degrees import Degrees
+from src.main.world_objects.robot_objects.degrees import Degrees
 
 
 class TestDegrees(unittest.TestCase):
@@ -19,7 +19,7 @@ class TestDegrees(unittest.TestCase):
     # def test_angle_setter(self):
     #     """Test setting the angle property."""
     #     d = Degrees(100)
-    #     d.angle = 370 # type: ignore
+    #     d.angle = 370 #
     #     self.assertEqual(d.angle, 10)  # 370 % 360 == 10
 
     def test_eq(self):

@@ -1,5 +1,5 @@
 import unittest
-from src.main.world_objects.position import Position
+from src.main.world_objects.robot_objects.position import Position
 from math import sqrt
 
 

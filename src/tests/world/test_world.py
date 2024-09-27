@@ -1,7 +1,7 @@
 import unittest
 from src.main.world import World
-from src.main.world_objects.position import Position
-from src.main.world_objects.degrees import Degrees
+from src.main.world_objects.robot_objects.position import Position
+from src.main.world_objects.robot_objects.degrees import Degrees
 
 class TestWorld(unittest.TestCase):
 
@@ -76,6 +76,8 @@ class TestWorld(unittest.TestCase):
 
     def test_world_shoot(self):
         bot1 = self.world.spawn_robot("Bot1", position=Position(0, 0), direction=Degrees(90))
+        self.world.spawn_robot("Bot2", position=Position(0, 10), direction=Degrees(270))
+
         self.world.shoot(shooter_name="Bot1")
 
         self.assertTrue(self.world.get_robot(name="Bot2").shield<bot1.shield)

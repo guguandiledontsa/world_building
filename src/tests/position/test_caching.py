@@ -1,7 +1,7 @@
 import unittest
 from math import sqrt
 
-from src.main.world_objects.position import Position
+from src.main.world_objects.robot_objects.position import Position
 
 
 class TestCacheBehavior(unittest.TestCase):

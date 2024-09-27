@@ -46,13 +46,13 @@ class Degrees:
 
     def __add__(self, other: 'Degrees') -> 'Degrees':
         """Add two Degrees instances."""
-        if not isinstance(other, Degrees): # type: ignore
+        if not isinstance(other, Degrees): #
             raise ValueError("The argument must be a Degrees instance.")
         return Degrees(self._normalize_angle(self.angle + other.angle))
 
     def __sub__(self, other: 'Degrees') -> 'Degrees':
         """Subtract two Degrees instances."""
-        if not isinstance(other, Degrees): # type: ignore
+        if not isinstance(other, Degrees): #
             raise ValueError("The argument must be a Degrees instance.")
         return Degrees(self._normalize_angle(self.angle - other.angle))
 

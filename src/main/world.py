@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from typing import Dict, List
 
-from src.main.world_objects.fuel_tank import FuelTank
-from src.main.world_objects.position import Position
-from src.main.world_objects.degrees import Degrees
+from src.main.world_objects.robot_objects.fuel_tank import FuelTank
+from src.main.world_objects.robot_objects.position import Position
+from src.main.world_objects.robot_objects.degrees import Degrees
 from src.main.world_objects.robot import Robot
-from src.main.world_objects.weapon import Weapon
+from src.main.world_objects.robot_objects.weapon import Weapon
 
 
 @dataclass
@@ -27,7 +27,7 @@ class World:
     def get_robot(self, name: str) -> Robot:
         """Get a robot by name."""
         name = name.lower()
-        return self.robots.get(name)  # type: ignore
+        return self.robots.get(name)  #
 
     def move_robot(self, name: str, steps: int, forward: bool) -> bool:
         """Move a robot by a certain number of steps."""

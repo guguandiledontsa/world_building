@@ -1,8 +1,8 @@
 import unittest
 from math import radians, cos, sin, isclose
 
-from src.main.world_objects.position import Position
-from src.main.world_objects.degrees import Degrees
+from src.main.world_objects.robot_objects.position import Position
+from src.main.world_objects.robot_objects.degrees import Degrees
 
 
 class TestPosition(unittest.TestCase):

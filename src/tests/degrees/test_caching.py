@@ -1,12 +1,12 @@
 import unittest
-from src.main.world_objects.degrees import Degrees
+from src.main.world_objects.robot_objects.degrees import Degrees
 
 
 class TestDegreesCaching(unittest.TestCase):
 
     def setUp(self):
         # Clear the cache before each test to ensure isolation
-        Degrees._normalize_angle.cache_clear()  # type: ignore
+        Degrees._normalize_angle.cache_clear()
 
     def test_normalization_cache_behavior(self):
         """Test the caching behavior of the normalization method."""
@@ -14,42 +14,42 @@ class TestDegreesCaching(unittest.TestCase):
         self.assertEqual(angle1.angle, 90)  # 450 normalized to 90
         self.assertEqual(
             Degrees._normalize_angle.cache_info().hits, 0
-        )  # No hits yet# type: ignore
+        )  # No hits yet
 
         # Call normalization for the second time, should use cache
         angle2 = Degrees(450)
         self.assertEqual(angle2.angle, 90)
         self.assertEqual(
             Degrees._normalize_angle.cache_info().hits, 1
-        )  # One hit# type: ignore
+        )  # One hit
 
         # Call normalization with a negative angle
         angle_neg = Degrees(-45)
         self.assertEqual(angle_neg.angle, 315)  # -45 normalized to 315
         self.assertEqual(
             Degrees._normalize_angle.cache_info().hits, 1
-        )  # Still one hit# type: ignore
+        )  # Still one hit
 
         # Call normalization with a new angle
         angle_new = Degrees(450)
         self.assertEqual(angle_new.angle, 90)
         self.assertEqual(
             Degrees._normalize_angle.cache_info().hits, 2
-        )  # Two hits now# type: ignore
+        )  # Two hits now
 
     def test_cache_size_management(self):
         """Test cache size and eviction policy."""
         self.assertEqual(
             Degrees._normalize_angle.cache_info().currsize, 0
-        )  # Should be 2# type: ignore
+        )  # Should be 2
 
         # Adding a new angle should evict the oldest entry
         self.assertEqual(
             Degrees._normalize_angle.cache_info().currsize, 0
-        )  # Still 2# type: ignore
+        )  # Still 2
         self.assertEqual(
             Degrees._normalize_angle.cache_info().misses, 0
-        )  # One miss for the evicted angle# type: ignore
+        )  # One miss for the evicted angle
 
     # def test_cache_performance(self):
     #     """Test performance improvement due to caching."""
@@ -84,48 +84,48 @@ class TestDegreesCaching(unittest.TestCase):
         Degrees(90)
 
         # Check initial cache size
-        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 2)  # type: ignore
+        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 2)
 
         # Clear the cache
-        Degrees._normalize_angle.cache_clear()  # type: ignore
-        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 0)  # type: ignore
+        Degrees._normalize_angle.cache_clear()
+        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 0)
 
     def test_repeated_calls_with_same_angle(self):
         """Test repeated calls with the same angle to ensure proper caching."""
         angle = Degrees(150)
         self.assertEqual(angle.angle, 150 % 360)
-        self.assertEqual(Degrees._normalize_angle.cache_info().hits, 0)  # type: ignore
+        self.assertEqual(Degrees._normalize_angle.cache_info().hits, 0)
 
         angle = Degrees(150)  # Call again to check cache hit
         self.assertEqual(angle.angle, 150 % 360)
-        self.assertEqual(Degrees._normalize_angle.cache_info().hits, 1)  # type: ignore
+        self.assertEqual(Degrees._normalize_angle.cache_info().hits, 1)
 
     def test_cache_eviction(self):
         """Test that cache evicts least-recently-used entries."""
         for i in range(10):
             Degrees(i * 37)  # Cache different values
 
-        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 10)  # type: ignore
+        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 10)
 
         # Adding one more should evict the oldest
         Degrees(370)  # This should evict the first entry
-        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 11)  # type: ignore
+        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 11)
 
     def test_cache_after_clear(self):
         """Test that cache size is reset after clear."""
         Degrees(60)
         Degrees(120)
 
-        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 2)  # type: ignore
+        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 2)
 
         # Clear cache
-        Degrees._normalize_angle.cache_clear()  # type: ignore
-        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 0)  # type: ignore
+        Degrees._normalize_angle.cache_clear()
+        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 0)
 
         # Adding new angles after clearing
         Degrees(60)
         Degrees(120)
-        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 2)  # type: ignore
+        self.assertEqual(Degrees._normalize_angle.cache_info().currsize, 2)
 
 
 if __name__ == "__main__":
