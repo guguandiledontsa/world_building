@@ -84,6 +84,10 @@ class TestWorld(unittest.TestCase):
 
         self.assertTrue(self.world.get_robot(name="Bot2").shield<bot1.shield)
 
+        self.world.shoot(shooter_name="Bot2")
+        self.assertEqual(self.world.get_robot(name="Bot2").shield, bot1.shield)
+
+
 
 if __name__ == "__main__":
     unittest.main()
