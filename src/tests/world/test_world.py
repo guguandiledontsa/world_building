@@ -2,6 +2,7 @@ import unittest
 from src.main.world import World
 from src.main.world_objects.position import Position
 from src.main.world_objects.degrees import Degrees
+from src.main.world_objects.robot import Robot
 
 
 class TestWorld(unittest.TestCase):
@@ -63,8 +64,25 @@ class TestWorld(unittest.TestCase):
         self.world.spawn_robot(
             name="Bot2", position=Position(1, 1), direction=Degrees(90)
         )
-        self.assertIn("Bot1", self.world.list_robots())
-        self.assertIn("Bot2", self.world.list_robots())
+        self.assertIn("Bot1".lower(), self.world.list_robots())
+        self.assertIn("Bot2".lower(), self.world.list_robots())
+
+    def test_robot_reload(self):
+        self.world.spawn_robot(name="Bot1", position=Position(0, 0), direction=Degrees(0))
+        bot = self.world.get_robot(name="Bot1")
+        self.assertEqual(bot.weapon.ammo, 5)
+        bot.shoot()
+        self.assertEqual(bot.weapon.ammo, 4)
+        bot.reload()
+        self.assertEqual(bot.weapon.ammo, 5)
+
+    def test_world_shoot(self):
+        bot1 = self.world.spawn_robot("Bot1", position=Position(0, 0), direction=Degrees(90))
+        bot2 = self.world.spawn_robot("Bot2", position=Position(0, 10), direction=Degrees(270))
+
+        self.world.shoot(shooter_name="Bot1")
+
+        self.assertTrue(self.world.get_robot(name="Bot2").shield<bot1.shield)
 
 
 if __name__ == "__main__":

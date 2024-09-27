@@ -4,7 +4,7 @@ from typing import Optional
 
 @dataclass(frozen=True)
 class Shield:
-    level: Optional[int] = field(default=None)  # Input shield level
+    level: Optional[float] = field(default=None)  # Input shield level
     shield_max: int = field(default=5)  # Default max shield level
     repair_delay: int = field(default=5)   # Default repair delay
     _is_repairing: bool = field(init=False, default=False)
@@ -40,7 +40,7 @@ class Shield:
             object.__setattr__(self, 'level', self.shield_max)
             object.__setattr__(self, '_is_repairing', False)
 
-    def damage_shield(self, damage: int) -> 'Shield':
+    def damage_shield(self, damage: float) -> 'Shield':
         """Apply damage to the shield, returning a new Shield instance with updated level."""
         with self.lock:
             current_level = self.level if self.level is not None else 0
@@ -66,6 +66,6 @@ class Shield:
         """Compare shields based on their shield levels."""
         if not isinstance(other, Shield):
             return NotImplemented
-        a = self.level if self.level is not None else 0
-        b = other.level if other.level is not None else 0
-        return a < b
+        s = self.level if self.level is not None else 0
+        o = other.level if other.level is not None else 0
+        return s < o

@@ -56,8 +56,8 @@ class Robot:
     def turn_right(self, degrees: float = 90) -> None:
         self.direction = self.direction.turn_right(degrees)
 
-    def damage_shield(self, damage: int) -> None:
-        self.shield.damage_shield(damage)
+    def damage_shield(self, damage: float) -> None:
+        self.shield = self.shield.damage_shield(damage)
 
     def repair_shield(self) -> None:
         self.shield.repair_shield()
@@ -67,6 +67,8 @@ class Robot:
             self.weapon = self.weapon.shot()
         except WeaponError as e:
             print(f"Weapon Error: {e}")
+
+
 
     def reload(self) -> None:
         try:

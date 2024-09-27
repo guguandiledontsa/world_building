@@ -23,7 +23,12 @@ class Weapon:
     @property
     def ammo(self) -> int:
         return self._ammo
-        
+
+    # @ammo.setter
+    # def ammo(self, value):
+    #     # return Weapon(_ammo=value, _ammo_max=self._ammo_max, _damage=self._damage, _loading=self._loading, _load_delay=self._load_delay)
+    #     self._ammo = value
+
     @property
     def ammo_max(self) -> int:
         return self._ammo_max
