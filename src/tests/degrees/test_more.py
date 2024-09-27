@@ -117,7 +117,7 @@ class TestDegrees(unittest.TestCase):
         self.assertEqual(new_d.angle, 270)  # 0 - 90 = -90 % 360 = 270
 
         d = Degrees(180)
-        new_d = d.turn_left(90)
+        new_d = d.turn_left()
         self.assertEqual(new_d.angle, 90)  # 180 - 90 = 90
 
     def test_turn_right(self):
@@ -136,7 +136,7 @@ class TestDegrees(unittest.TestCase):
         self.assertEqual(new_d.angle, 90)  # 0 + 90 = 90
 
         d = Degrees(180)
-        new_d = d.turn_right(90)
+        new_d = d.turn_right()
         self.assertEqual(new_d.angle, 270)  # 180 + 90 = 270
 
     def test_turn_left_custom_degrees(self):
@@ -146,7 +146,7 @@ class TestDegrees(unittest.TestCase):
         self.assertEqual(new_d.angle, 135)  # 180 - 45 = 135
 
         d = Degrees(30)
-        new_d = d.turn_left(90)
+        new_d = d.turn_left()
         self.assertEqual(new_d.angle, 300)  # 30 - 90 = -60 % 360 = 300
 
     def test_turn_right_custom_degrees(self):
@@ -156,7 +156,7 @@ class TestDegrees(unittest.TestCase):
         self.assertEqual(new_d.angle, 90)  # 45 + 45 = 90
 
         d = Degrees(300)
-        new_d = d.turn_right(90)
+        new_d = d.turn_right()
         self.assertEqual(new_d.angle, 30)  # 300 + 90 = 390 % 360 = 30
 
     # def test_caching_behavior(self):

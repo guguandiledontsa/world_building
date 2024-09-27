@@ -99,7 +99,7 @@ class TestPosition(unittest.TestCase):
     def test_negative_angle(self):
         angle = Degrees(-45)  # Equivalent to 315 degrees
         steps = 10
-        rad_angle = radians(angle.angle)
+        radians(angle.angle)
         expected_x = steps * cos(radians(45))
         expected_y = -steps * sin(radians(45))
         new_pos = self.start_pos.move(angle, steps)

@@ -10,7 +10,7 @@ class InvalidAngleError(Exception):
 
 @dataclass(frozen=True)
 class Degrees:
-    _angle: float = field(init=True, repr=False)
+    _angle: float = field(repr=False)
 
     def __post_init__(self):
         # Normalize the angle using the setter
