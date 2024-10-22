@@ -47,13 +47,14 @@ class Degrees:
     def __add__(self, other: 'Degrees') -> 'Degrees':
         """Add two Degrees instances."""
         if not isinstance(other, Degrees): #
-            raise ValueError("The argument must be a Degrees instance.")
+            raise ValueError(f"Invalid addition: {self.angle} + {other.angle} results in an invalid angle.")
         return Degrees(self._normalize_angle(self.angle + other.angle))
 
     def __sub__(self, other: 'Degrees') -> 'Degrees':
         """Subtract two Degrees instances."""
         if not isinstance(other, Degrees): #
-            raise ValueError("The argument must be a Degrees instance.")
+            raise ValueError(f"Invalid subtraction: {self.angle} - {other.angle} results in an invalid angle.")
+
         return Degrees(self._normalize_angle(self.angle - other.angle))
 
     def __eq__(self, other: object) -> bool:
@@ -71,3 +72,9 @@ class Degrees:
 
     def __str__(self) -> str:
         return f"{self.angle}°"
+
+    def to_cardinal(self) -> str:
+        """Convert angle to cardinal direction."""
+        cardinal_points = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+        index = round(self.angle / 45) % 8
+        return cardinal_points[index]

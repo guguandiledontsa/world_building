@@ -55,7 +55,7 @@ class Weapon:
 
     def shot(self) -> 'Weapon':
         if self.is_empty:
-            raise WeaponError("Cannot shoot: Weapon is empty.")
+            raise WeaponError("Cannot shoot: Out of ammo, current ammo: {}".format(self.ammo))
         
         with self._lock:
             return Weapon(_ammo=self._ammo - 1, _ammo_max=self._ammo_max, _damage=self._damage,
@@ -63,7 +63,7 @@ class Weapon:
 
     def reload(self) -> 'Weapon':
         if self.loading:
-            raise WeaponError("Cannot reload: Weapon is already loading.")
+            raise WeaponError("Already loading. Wait for the current reload to finish.")
         
         with self._lock:
             return Weapon(_ammo=self._ammo_max, _ammo_max=self._ammo_max, _damage=self._damage,

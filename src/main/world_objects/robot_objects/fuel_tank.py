@@ -13,7 +13,8 @@ class FuelTank:
             raise ValueError("Fuel tank level cannot be greater than volume")
         if self.level < 0:
             object.__setattr__(self, "level", self.volume)
-
+        if self.cost <= 0 or self.volume <= 0:
+            raise ValueError("Cost and volume must be positive.")
 
     def drop_fuel(self, distance: float):
         new_level = self.level - (distance * self.cost)

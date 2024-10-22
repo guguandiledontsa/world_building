@@ -7,7 +7,7 @@ class Shield:
     level: Optional[float] = field(default=None)  # Input shield level
     shield_max: int = field(default=5)  # Default max shield level
     repair_delay: int = field(default=5)   # Default repair delay
-    _is_repairing: bool = field(init=False, default=False)
+    _is_repairing: threading.Event = field(default_factory=threading.Event, init=False)
     lock: threading.Lock = field(default_factory=threading.Lock, init=False)
 
     def __post_init__(self):

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from functools import lru_cache
 from math import sqrt, isclose, cos, sin, isnan, isinf
@@ -29,7 +31,7 @@ class Position:
             raise ValueError("The argument must be a Position instance.")
         return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
-    def move(self, angle: "Degrees", steps: float) -> "Position":
+    def move(self, angle: "Degrees"| int, steps: float) -> "Position":
         """Move the position by a certain number of steps in the specified angle."""
         if not isinstance(angle, Degrees):  #
             raise ValueError("Angle must be a Degrees instance.")
@@ -65,6 +67,17 @@ class Position:
         return isclose(self.x, other.x, abs_tol=1e-9) and isclose(
             self.y, other.y, abs_tol=1e-9
         )
+
+    def surrounding(self) -> ["Position"]:
+        return [
+            (self.x - 1, self.y + 1), (self.x + 1, self.y - 1),  # alt diag
+            (self.x, self.y + 1), (self.x, self.y - 1),  # vertical
+            (self.x + 1, self.y), (self.x - 1, self.y), # horizontal
+            (self.x + 1, self.y + 1), (self.x - 1, self.y - 1),  # main diag
+        ]
+
+    def as_tuple(self):
+        return self.x, self.y
 
     def __repr__(self):
         return f"Position(x={self.x}, y={self.y})"
