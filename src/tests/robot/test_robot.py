@@ -50,23 +50,22 @@ class MyTestCase(unittest.TestCase):
         # self.assertEqual(robot.status, "Ready")
         # self.assertEqual(robot.history, [])
         self.assertEqual(robot.type, RobotType.SUPPORT)
-        self.assertEqual(robot.weapon.damage, 1)
-        self.assertEqual(robot.shield.shield_max, 2)
-        self.assertEqual(robot.weapon.ammo, 4)
-        self.assertEqual(robot.shield.level, 2)
-        self.assertEqual(robot.shield.repair_delay, 3)
-        self.assertEqual(robot.weapon.load_delay, 2)
+        self.assertEqual(robot.weapon.damage, 5)
+        self.assertEqual(robot.shield.shield_max, 5)
+        self.assertEqual(robot.weapon.ammo, 5)
+        self.assertEqual(robot.shield.level, 5)
+        self.assertEqual(robot.shield.repair_delay, 5)
+        self.assertEqual(robot.weapon.load_delay, 5)
         self.assertFalse(robot.weapon.loading)
         self.assertFalse(robot.shield.is_repairing)
 
     def test_set_attributes_based_on_type(self):
         robot_types = {
-            "scout": (1, 5, 1, 2, 2),
-            "sniper": (5, 1, 1, 4, 5),
-            "tank": (3, 5, 5, 5, 3),
-            "assault": (2, 3, 3, 3, 3),
-            "support": (1, 4, 2, 3, 2),
-            "basic": (1, 5, 5, 5, 5)
+            RobotType.SCOUT: (1, 1, 1, 1, 1),
+            RobotType.SNIPER: (2, 2, 2, 2, 2),
+            RobotType.TANK: (3, 3, 3, 3, 3),
+            RobotType.ASSAULT: (4, 4, 4, 4, 4),
+            RobotType.SUPPORT: (5, 5, 5, 5, 5),
         }
 
         for robot_type, attributes in robot_types.items():

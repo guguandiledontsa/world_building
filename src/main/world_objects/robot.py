@@ -25,7 +25,7 @@ class Robot:
     shield: Shield = field(default_factory=lambda: Shield(shield_max=5))
     weapon: Weapon = field(default_factory=lambda: Weapon(_ammo=5))
     tank: FuelTank = field(default_factory=lambda: FuelTank(volume=50))
-    type: str = field(default=RobotType.SUPPORT)
+    type: RobotType = field(default=RobotType.SUPPORT)
 
     def __post_init__(self):
         self.set_attributes_based_on_type()
@@ -33,11 +33,11 @@ class Robot:
     def set_attributes_based_on_type(self):
         # Define attributes based on the RobotType Enum
         type_attributes = {
-            RobotType.SCOUT: (1, 5, 1, 2, 2),
-            RobotType.SNIPER: (5, 1, 1, 4, 5),
-            RobotType.TANK: (3, 5, 5, 5, 3),
-            RobotType.ASSAULT: (2, 3, 3, 3, 3),
-            RobotType.SUPPORT: (1, 4, 2, 3, 2),
+            RobotType.SCOUT: (1, 1, 1, 1, 1),
+            RobotType.SNIPER: (2, 2, 2, 2, 2),
+            RobotType.TANK: (3, 3, 3, 3, 3),
+            RobotType.ASSAULT: (4, 4, 4, 4, 4),
+            RobotType.SUPPORT: (5, 5, 5, 5, 5),
         }
 
         # Look up attributes based on the robot's type
