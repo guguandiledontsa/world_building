@@ -8,12 +8,14 @@ from src.main.world_objects.robot_objects.degrees import Degrees
 from src.main.world_objects.robot_objects.shield import Shield
 from src.main.world_objects.robot_objects.weapon import Weapon, WeaponError
 
+
 class RobotType(Enum):
     SCOUT = "scout"
     SNIPER = "sniper"
     TANK = "tank"
     ASSAULT = "assault"
     SUPPORT = "support"
+
 
 @dataclass
 class Robot:
@@ -42,23 +44,22 @@ class Robot:
         attributes = type_attributes.get(self.type)
         if attributes:
             shot_damage, ammo_max, shield_max, repair_delay, reload_delay = attributes
-            self.weapon = Weapon(_ammo=ammo_max, _load_delay=reload_delay, _damage=shot_damage, _ammo_max=ammo_max)
-            self.shield = Shield(shield_max=shield_max, repair_delay=repair_delay)
+            self.weapon = Weapon(
+                _ammo=ammo_max, _load_delay=reload_delay, _damage=shot_damage, _ammo_max=ammo_max)
+            self.shield = Shield(shield_max=shield_max,
+                                 repair_delay=repair_delay)
 
     def update_position(self, nr_steps: int, forward: bool) -> bool:
         steps = nr_steps if forward else -nr_steps
-
-        try:
-            self.tank = self.tank.drop_fuel(distance=nr_steps)
-        except ValueError:
-            print("not enough fuel")
-            return False
-
-        self.position = self.position.move(self.direction, steps)
-        return True
+        
+        if self._drop_fuel(nr_steps):
+            self.position = self.position.move(self.direction, steps)
+            return True
+        return False
 
     def move_forward(self, nr_steps: int) -> bool:
         return self.update_position(nr_steps, forward=True)
+
     def move_backward(self, nr_steps: int) -> bool:
         return self.update_position(nr_steps, forward=False)
 
@@ -97,6 +98,16 @@ class Robot:
             self.tank = self.tank.refuel()
         except ValueError as e:
             print(e)
+
+    def _drop_fuel(self, steps: int):
+        try:
+            self.tank = self.tank.drop_fuel(
+                distance=steps)
+            return True
+        except ValueError:
+            print(
+                "not enough fuel")
+            return False
 
     def __str__(self):
         return (
