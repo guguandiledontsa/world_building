@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch
 
 from src.main.world_objects.robot import Robot
+from src.main.world_objects.robot import RobotType
 from src.main.world_objects.robot_objects.position import Position
 from src.main.world_objects.robot_objects.degrees import Degrees  # Updated import
 
@@ -48,14 +49,13 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(robot.direction, Degrees(0))  # Updated to Degrees
         # self.assertEqual(robot.status, "Ready")
         # self.assertEqual(robot.history, [])
-        self.assertEqual(robot.type, "basic")
+        self.assertEqual(robot.type, RobotType.SUPPORT)
         self.assertEqual(robot.weapon.damage, 1)
-        self.assertEqual(robot.weapon.ammo, 5)
-        self.assertEqual(robot.shield.shield_max, 5)
-        self.assertEqual(robot.weapon.ammo, 5)
-        self.assertEqual(robot.shield.level, 5)
-        self.assertEqual(robot.shield.repair_delay, 5)
-        self.assertEqual(robot.weapon.load_delay, 5)
+        self.assertEqual(robot.shield.shield_max, 2)
+        self.assertEqual(robot.weapon.ammo, 4)
+        self.assertEqual(robot.shield.level, 2)
+        self.assertEqual(robot.shield.repair_delay, 3)
+        self.assertEqual(robot.weapon.load_delay, 2)
         self.assertFalse(robot.weapon.loading)
         self.assertFalse(robot.shield.is_repairing)
 

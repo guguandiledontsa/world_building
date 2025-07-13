@@ -19,7 +19,7 @@ class RobotType(Enum):
 
 @dataclass
 class Robot:
-    name: str
+    name: str = field(default="bot")
     position: Position = field(default_factory=lambda: Position(0, 0))
     direction: Degrees = field(default_factory=lambda: Degrees(0))
     shield: Shield = field(default_factory=lambda: Shield(shield_max=5))
@@ -87,26 +87,24 @@ class Robot:
         except WeaponError as e:
             print(e)
 
-    def shield_level(self) -> Optional[int]:
-        return self.shield.level
-
-    def tank_level(self) -> float:
-        return self.tank.level
-
     def refuel(self) -> None:
         try:
             self.tank = self.tank.refuel()
         except ValueError as e:
             print(e)
 
+    def shield_level(self) -> Optional[int]:
+        return self.shield.level
+
+    def tank_level(self) -> float:
+        return self.tank.level
+
     def _drop_fuel(self, steps: int):
         try:
-            self.tank = self.tank.drop_fuel(
-                distance=steps)
+            self.tank = self.tank.drop_fuel(distance=steps)
             return True
         except ValueError:
-            print(
-                "not enough fuel")
+            print("not enough fuel")
             return False
 
     def __str__(self):
