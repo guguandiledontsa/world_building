@@ -25,7 +25,7 @@ class Robot:
     shield: Shield = field(default_factory=lambda: Shield(shield_max=5))
     weapon: Weapon = field(default_factory=lambda: Weapon(_ammo=5))
     tank: FuelTank = field(default_factory=lambda: FuelTank(volume=50))
-    type: RobotType = field(default=RobotType.SUPPORT)
+    robot_type: RobotType = field(default=RobotType.SUPPORT)
 
     def __post_init__(self):
         self.set_attributes_based_on_type()
@@ -40,8 +40,17 @@ class Robot:
             RobotType.SUPPORT: (5, 5, 5, 5, 5),
         }
 
+        # Normalize robot_type first
+        if isinstance(self.robot_type, str):
+            try:
+                self.robot_type = RobotType(self.robot_type.lower())
+            except ValueError:
+                allowed = [t.value for t in RobotType]
+                print(f"Invalid robot type: '{self.robot_type}'. Must be one of: {allowed}")
+                self.robot_type = RobotType.SUPPORT
+
         # Look up attributes based on the robot's type
-        attributes = type_attributes.get(self.type)
+        attributes = type_attributes.get(self.robot_type)
         if attributes:
             shot_damage, ammo_max, shield_max, repair_delay, reload_delay = attributes
             self.weapon = Weapon(
@@ -110,5 +119,5 @@ class Robot:
     def __str__(self):
         return (
             f"Name: {self.name}, Position: {self.position}, Direction: {self.direction.angle}, "
-            f"Shield Level: {self.shield_level()}, Ammo: {self.weapon.ammo}, Fuel Level: {self.tank_level()}, Type: {self.type}"
+            f"Shield Level: {self.shield_level()}, Ammo: {self.weapon.ammo}, Fuel Level: {self.tank_level()}, Type: {self.robot_type.value}"
         )

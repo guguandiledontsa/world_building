@@ -20,7 +20,7 @@ class World:
         if name in self.robots:
             raise ValueError(f"A robot with the name '{name}' already exists.")
         self.robots[name] = Robot(
-            name=name, position=position, direction=direction, type=robot_type, tank=tank
+            name=name, position=position, direction=direction,robot_type=robot_type, tank=tank
         )
         return self.robots[name]
 

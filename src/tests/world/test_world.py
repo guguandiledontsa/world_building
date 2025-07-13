@@ -2,6 +2,7 @@ import unittest
 from src.main.world import World
 from src.main.world_objects.robot_objects.position import Position
 from src.main.world_objects.robot_objects.degrees import Degrees
+from src.main.world_objects.robot import RobotType
 
 class TestWorld(unittest.TestCase):
 
@@ -16,7 +17,7 @@ class TestWorld(unittest.TestCase):
         self.assertIsNotNone(robot)
         self.assertEqual(robot.position, Position(0, 0))
         self.assertEqual(robot.direction.angle, 90)
-        self.assertEqual(robot.type, "scout")
+        self.assertEqual(robot.robot_type, RobotType.SCOUT)
 
     def test_spawn_robot_with_duplicate_name(self):
         self.world.spawn_robot(

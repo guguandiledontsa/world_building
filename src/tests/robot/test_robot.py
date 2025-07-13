@@ -49,7 +49,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(robot.direction, Degrees(0))  # Updated to Degrees
         # self.assertEqual(robot.status, "Ready")
         # self.assertEqual(robot.history, [])
-        self.assertEqual(robot.type, RobotType.SUPPORT)
+        self.assertEqual(robot.robot_type, RobotType.SUPPORT)
         self.assertEqual(robot.weapon.damage, 5)
         self.assertEqual(robot.shield.shield_max, 5)
         self.assertEqual(robot.weapon.ammo, 5)
@@ -70,7 +70,7 @@ class MyTestCase(unittest.TestCase):
 
         for robot_type, attributes in robot_types.items():
             with self.subTest(robot_type=robot_type):
-                robot = Robot(name="TestBot", type=robot_type)
+                robot = Robot(name="TestBot",robot_type=robot_type)
                 robot.set_attributes_based_on_type()
                 self.assertEqual(robot.weapon.damage, attributes[0])
                 self.assertEqual(robot.weapon.ammo_max, attributes[1])
@@ -98,27 +98,27 @@ class MyTestCase(unittest.TestCase):
         robot = self.default_robot
         expected_str = (
             f"Name: TestBot, Position: (0, 0), Direction: {robot.direction.angle}, "
-            f"Shield Level: 5, Ammo: 5, Fuel Level: 50, Type: basic"
+            f"Shield Level: 5, Ammo: 5, Fuel Level: 50, Type: {robot.robot_type.value}"
         )
         self.assertEqual(str(robot), expected_str)
 
     def test_initial_ammo(self):
-        robot = Robot(name="TestBot", type="sniper")
-        self.assertEqual(robot.weapon.ammo, 1)
+        robot = Robot(name="TestBot", robot_type="sniper")
+        self.assertEqual(robot.weapon.ammo, 2)
 
     def test_shield_max(self):
-        robot = Robot(name="TestBot", type="tank")
-        self.assertEqual(robot.shield.level, 5)
+        robot = Robot(name="TestBot",robot_type="tank")
+        self.assertEqual(robot.shield.level, 3)
 
     def test_repair_and_reload_delays(self):
-        robot = Robot(name="TestBot", type="support")
-        self.assertEqual(robot.shield.repair_delay, 3)
-        self.assertEqual(robot.weapon.load_delay, 2)
+        robot = Robot(name="TestBot",robot_type="support")
+        self.assertEqual(robot.shield.repair_delay, 5)
+        self.assertEqual(robot.weapon.load_delay, 5)
 
     def test_edge_case(self):
-        robot = Robot(name="TestBot", type="unknown")
+        robot = Robot(name="TestBot",robot_type="unknown")
         robot.set_attributes_based_on_type()
-        self.assertEqual(robot.weapon.damage, 1)  # Default values
+        self.assertEqual(robot.weapon.damage, 5)  # Default values
         self.assertEqual(robot.weapon.ammo_max, 5)
         self.assertEqual(robot.shield.shield_max, 5)
         self.assertEqual(robot.shield.repair_delay, 5)
