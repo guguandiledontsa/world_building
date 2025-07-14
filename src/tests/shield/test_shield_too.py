@@ -32,7 +32,7 @@ class TestRobotShield(unittest.TestCase):
         with patch('time.sleep', return_value=None):
             self.robot.repair_shield()
             # Assuming your repair method immediately sets the shield to max after the process
-            self.assertEqual(self.robot.shield_level(), 5)
+            self.assertEqual(self.robot.shield_level(), 6)
 
     def test_repair_when_full(self):
         self.robot.repair_shield()  # Repairing when at max
