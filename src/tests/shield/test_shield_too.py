@@ -27,13 +27,8 @@ class TestRobotShield(unittest.TestCase):
     def test_repair_shield(self):
         self.robot.damage_shield(1)
         self.assertEqual(self.robot.shield_level(), 4)
-        # Patch threading.Timer to run the repair immediately
-        with patch("threading.Timer") as mock_timer_class:
-            def instant_timer(delay, callback):
-                callback()  # Instantly call the repair function
-                return Mock()  # Return a mock so .start() doesn't break
-            mock_timer_class.side_effect = instant_timer
-            self.robot.repair_shield()
+        self.robot.repair_shield()
+        time.sleep(5.1)
         self.assertEqual(self.robot.shield_level(), 5)
 
     def test_repair_when_full(self):
