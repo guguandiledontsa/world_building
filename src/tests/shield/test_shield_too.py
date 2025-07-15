@@ -1,4 +1,5 @@
 import unittest
+import time
 from unittest.mock import patch
 from src.main.world_objects.robot import Robot
 
