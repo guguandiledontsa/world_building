@@ -24,16 +24,17 @@ class TestRobotShield(unittest.TestCase):
             self.robot.damage_shield(1)
         self.assertEqual(self.robot.shield_level(), 0)
 
-    @unittest.skip("will work on after i know all is well with testing using github workflows")
     def test_repair_shield(self):
         self.robot.damage_shield(1)
         self.assertEqual(self.robot.shield_level(), 4)
-
-        # Simulate the time passing for repair
-        with patch('time.sleep', return_value=None):
+        # Patch threading.Timer to run the repair immediately
+        with patch("threading.Timer") as mock_timer_class:
+            def instant_timer(delay, callback):
+                callback()  # Instantly call the repair function
+                return Mock()  # Return a mock so .start() doesn't break
+            mock_timer_class.side_effect = instant_timer
             self.robot.repair_shield()
-            # Assuming your repair method immediately sets the shield to max after the process
-            self.assertEqual(self.robot.shield_level(), 5)
+        self.assertEqual(self.robot.shield_level(), 5)
 
     def test_repair_when_full(self):
         self.robot.repair_shield()  # Repairing when at max
