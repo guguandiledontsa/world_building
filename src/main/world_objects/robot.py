@@ -17,46 +17,88 @@ class RobotType(Enum):
     SUPPORT = "support"
 
 
+class RobotType(Enum):
+    SCOUT = RobotStats(1, 1, 1, 1, 1)
+    SNIPER = RobotStats(2, 2, 2, 2, 2)
+    TANK = RobotStats(3, 3, 3, 3, 3)
+    ASSAULT = RobotStats(4, 4, 4, 4, 4)
+    SUPPORT = RobotStats(5, 5, 5, 5, 5)
+    
+    @property
+    def shot_damage(self): return self._shot_damage
+    
+    @shot_damage.setter
+    def shot_damage(self, value): self._shot_damage = value
+    
+   @property
+   def ammo_max(self): return self._ammo_max
+   
+   @ammo_max.setter
+   def ammo_max(self, value): self._ammo_max = value
+   
+   @property
+   def shield_max(self): return self._shield_max
+   
+   @shield_max.setter
+   def shield_max(self, value): self._shield_max = value
+   
+   @property
+   def repair_delay(self): return self._repair_delay
+   
+   @repair_delay.setter
+   def repair_delay(self, value): self._repair_delay = value
+   
+   @property
+   def reload_delay(self): return self._reload_delay
+   
+   @reload_delay.setter
+   def reload_delay(self, value): self._reload_delay = value
+   
+   @property
+   def tank_level(self):
+       return self._tank_level
+   
+   @tank_level.setter
+   def tank_level(self, value):
+       self._tank_level = value
+     
+     
+    @property
+    def tank_volume(self):
+        return self._tank_volume
+    
+    @tank_volume.setter
+    def tank_volume(self, value):
+        self._tank_volume = value
+     
+     @property
+     def fual_cost(self):
+         return self._fual_cost
+     
+     @fual_cost.setter
+     def fual_cost(self, value):
+         self._fual_cost = value
+     
+    
+
 @dataclass
 class Robot:
     name: str = field(default="bot")
     position: Position = field(default_factory=lambda: Position(0, 0))
     direction: Degrees = field(default_factory=lambda: Degrees(0))
-    shield: Shield = field(default_factory=lambda: Shield(shield_max=5))
-    weapon: Weapon = field(default_factory=lambda: Weapon(_ammo=5))
-    tank: FuelTank = field(default_factory=lambda: FuelTank(volume=50))
+    
     robot_type: RobotType = field(default=RobotType.SUPPORT)
 
-    def __post_init__(self):
-        self.set_attributes_based_on_type()
+    shield: Shield = field(init=False)
+    weapon: Weapon = field(init÷False)
+    tank: FuelTank = field(init=False)
 
-    def set_attributes_based_on_type(self):
-        # Define attributes based on the RobotType Enum
-        type_attributes = {
-            RobotType.SCOUT: (1, 1, 1, 1, 1),
-            RobotType.SNIPER: (2, 2, 2, 2, 2),
-            RobotType.TANK: (3, 3, 3, 3, 3),
-            RobotType.ASSAULT: (4, 4, 4, 4, 4),
-            RobotType.SUPPORT: (5, 5, 5, 5, 5),
-        }
-
-        # Normalize robot_type first
-        if isinstance(self.robot_type, str):
-            try:
-                self.robot_type = RobotType(self.robot_type.lower())
-            except ValueError:
-                allowed = [t.value for t in RobotType]
-                print(f"Invalid robot type: '{self.robot_type}'. Must be one of: {allowed}")
-                self.robot_type = RobotType.SUPPORT
-
-        # Look up attributes based on the robot's type
-        attributes = type_attributes.get(self.robot_type)
-        if attributes:
-            shot_damage, ammo_max, shield_max, repair_delay, reload_delay = attributes
-            self.weapon = Weapon(
-                _ammo=ammo_max, _load_delay=reload_delay, _damage=shot_damage, _ammo_max=ammo_max)
-            self.shield = Shield(shield_max=shield_max,
-                                 repair_delay=repair_delay)
+    def __post_init__(self) -> None:
+        '''set_attributes_based_on_type '''
+        stats = self.robot_type
+        self.weapon = Weapon(_ammo=stats.ammo_max, _load_delay=stats.reload_delay, _damage=stats.shot_damage, _ammo_max=stats.ammo_max)
+        self.shield = Shield(shield_max=stats.shield_max, repair_delay=stats.repair_delay)
+        self.tank = FuelTank(level=stats.tank_level, cost=stats.fual_cost, volume=stats.tank_volume)
 
     def update_position(self, nr_steps: int, forward: bool) -> bool:
         steps = nr_steps if forward else -nr_steps
@@ -66,29 +108,11 @@ class Robot:
             return True
         return False
 
-    def move_forward(self, nr_steps: int) -> bool:
-        return self.update_position(nr_steps, forward=True)
-
-    def move_backward(self, nr_steps: int) -> bool:
-        return self.update_position(nr_steps, forward=False)
-
-    def turn_left(self, degrees: float = 90) -> None:
-        self.direction = self.direction.turn_left(degrees)
-
-    def turn_right(self, degrees: float = 90) -> None:
-        self.direction = self.direction.turn_right(degrees)
-
-    def damage_shield(self, damage: float) -> None:
-        self.shield = self.shield.damage_shield(damage)
-
-    def repair_shield(self) -> None:
-        self.shield.repair_shield()
-
     def shoot(self) -> None:
         try:
             self.weapon = self.weapon.shot()
         except WeaponError as e:
-            print(f"{e}")
+            print(e)
 
     def reload(self) -> None:
         try:
@@ -102,12 +126,6 @@ class Robot:
         except ValueError as e:
             print(e)
 
-    def shield_level(self) -> Optional[int]:
-        return self.shield.level
-
-    def tank_level(self) -> float:
-        return self.tank.level
-
     def _drop_fuel(self, steps: int):
         try:
             self.tank = self.tank.drop_fuel(distance=steps)
@@ -116,6 +134,21 @@ class Robot:
             print("not enough fuel")
             return False
 
+    def repair_shield(self) -> None: self.shield.repair_shield()
+
+    def move_forward(self, nr_steps: int) -> bool: return self.update_position(nr_steps, forward=True)
+
+    def move_backward(self, nr_steps: int) -> bool: return self.update_position(nr_steps, forward=False)
+
+    def damage_shield(self, damage: float) -> None:
+        self.shield = self.shield.damage_shield(damage)
+        
+   def turn_left(self, degrees: float = 90) -> None:
+        self.direction = self.direction.turn_left(degrees)
+
+    def turn_right(self, degrees: float = 90) -> None:
+        self.direction = self.direction.tur66n_right(degrees)
+        
     def __str__(self):
         return (
             f"Name: {self.name}, Position: {self.position}, Direction: {self.direction.angle}, "
